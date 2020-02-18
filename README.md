@@ -10,7 +10,7 @@
 ### [5. 创建Document](#%e5%88%9b%e5%bb%ba-document)
 ### [6. 查询Document](#%e6%9f%a5%e8%af%a2-document)
 * #### [查询](#query)
-* #### [使用 比较运算符](#comparison-operatiors-%e4%bd%bf%e7%94%a8-b%e6%af%94%e8%be%83%e8%bf%90%e7%ae%97%e7%ac%a6b)
+* #### [使用 比较运算符](###comparison-operatiors-%e4%bd%bf%e7%94%a8-b%e6%af%94%e8%be%83%e8%bf%90%e7%ae%97%e7%ac%a6b)
 * #### [使用 逻辑运算符](#logical-operators-%e4%bd%bf%e7%94%a8-b%e9%80%bb%e8%be%91%e8%bf%90%e7%ae%97%e7%ac%a6b)
 * #### [使用 正则表达式 进行 模糊查询](#regular-expression-%e4%bd%bf%e7%94%a8-%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f-%e8%bf%9b%e8%a1%8c-b%e6%a8%a1%e7%b3%8a%e6%9f%a5%e8%af%a2b)
 * #### [排序](#order-b%e6%8e%92%e5%ba%8fb)
