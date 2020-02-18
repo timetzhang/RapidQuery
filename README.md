@@ -4,19 +4,19 @@
 
 ## Content
 ### [1. Intro](#intro)
-### [2. Installation]
-### [3. Usage]
-### [4. 定义Model]
-### [5. 创建Document]
-### [6. 查询Document]
-* #### <a href="#6-1">查询</a>
-* #### <a href="#6-2">使用 比较运算符</a>
-* #### <a href="#6-3">使用 逻辑运算符</a>
-* #### <a href="#6-4">使用 正则表达式 进行 模糊查询</a>
-* #### <a href="#6-5">排序</a>
-* #### <a href="#6-6">pageNum 和 pageSize</a
-### <a href="#7">7. 更改Document</a>
-### <a href="#8">8. 删除Document</a>
+### [2. Installation](#installation)
+### [3. Usage](#usage)
+### [4. 定义Model](#%e5%ae%9a%e4%b9%89-model)
+### [5. 创建Document](#%e5%88%9b%e5%bb%ba-document)
+### [6. 查询Document](#%e6%9f%a5%e8%af%a2-document)
+* #### [查询](#%e6%9f%a5%e8%af%a2%e5%90%8d%e5%ad%97%e5%8f%abtt%e7%9a%84%e7%94%a8%e6%88%b7)
+* #### [使用 比较运算符](#%e4%bd%bf%e7%94%a8-b%e6%af%94%e8%be%83%e8%bf%90%e7%ae%97%e7%ac%a6b)
+* #### [使用 逻辑运算符](#%e4%bd%bf%e7%94%a8-b%e9%80%bb%e8%be%91%e8%bf%90%e7%ae%97%e7%ac%a6b-logical-operators)
+* #### [使用 正则表达式 进行 模糊查询](#%e4%bd%bf%e7%94%a8-%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f-%e8%bf%9b%e8%a1%8c-b%e6%a8%a1%e7%b3%8a%e6%9f%a5%e8%af%a2b)
+* #### [排序](#b%e6%8e%92%e5%ba%8fb)
+* #### [pageNum 和 pageSize](#pagesize-%e5%92%8c-pagenum)
+### [7. 更改Document](#%e6%9b%b4%e6%94%b9-update-document)
+### [8. 删除Document](#%e5%88%a0%e9%99%a4-delete-document)
 
 ----
 
@@ -49,7 +49,7 @@ http://localhost:8080/rapidql
 ```
 ---
 
-## 2. Installation <a id="2"></a>
+## Installation
 ```key
 npm install --save rapidquery
 ```
@@ -61,7 +61,7 @@ cnpm install --save rapidquery
 
 ---
 
-## 3. Usage <a id="3"></a>
+## Usage
 
 ```key
 const RapidQuery = require("rapidquery");
@@ -95,7 +95,7 @@ app.use("/rapidquery", rapid.expressMiddleware);
 
 ---
 
-## 4. 定义 Model <a id="4"></a>
+## 定义 Model
 
 for more schema define, please visit: https://mongoosejs.com/docs/guide.html
 <br />for more Datatypes, please visit: https://mongoosejs.com/docs/schematypes.html
@@ -121,7 +121,7 @@ rapid.define({
 ---
 
 
-## 5. 创建 Document <a id="5"></a>
+## 创建 Document
 
 使用GET方法:
 ```key
@@ -169,9 +169,9 @@ http://localhost:8080/rapidquery?query={"create user":{"firstname":"tt"}}
 ---
 
 
-## 6. 查询 Document <a id="6"></a>
+## 查询 Document
 
-* 查询名字叫tt的用户 <a id="6-1"></a>
+### 查询名字叫tt的用户
 ```keys
 {
   "query users": {
@@ -194,7 +194,8 @@ http://localhost:8080/rapidquery?query={"create user":{"firstname":"tt"}}
 ]
 ```
 <br />
-* 使用 <b>比较运算符</b><a id="6-2"></a><br /> 
+
+### 使用 <b>比较运算符</b> 
 
 ```keys
 {
@@ -231,7 +232,7 @@ $ne: not equal       不等于
 
 <br />
 
-* 使用 <b>逻辑运算符</b> <a id="6-3"></a>
+### 使用 <b>逻辑运算符</b> Logical Operators
 
 ```keys
 {
@@ -246,7 +247,7 @@ $ne: not equal       不等于
 
 <br />
 
-* 使用 正则表达式 进行 <b>模糊查询</b><a id="6-4"></a> 
+### 使用 正则表达式 进行 <b>模糊查询</b>
 
 ```key
 {
@@ -257,7 +258,7 @@ $ne: not equal       不等于
 ```
 <br />
 
-* <b>排序</b><a id="6-5"></a> 
+### <b>排序</b>
 
 按年龄进行倒序
 ```keys
@@ -271,7 +272,7 @@ $ne: not equal       不等于
 ```
 <br />
 
-* PageSize 和 PageNum <a id="6-6"></a>
+### PageSize 和 PageNum
   
 pageSize来控制每页返回数据的行数，pageNum来控制第几页
 
@@ -289,7 +290,7 @@ pageSize来控制每页返回数据的行数，pageNum来控制第几页
 
 ---
 
-## 7. 更改 Document <a id="7"></a>
+## 更改 Update Document
 
 更新名字为 "tt" 的用户的年龄为 35<br />
 注意：使用 "firstname" 前面有个 <b>"\*"</b>, 表示查询条件.
@@ -310,7 +311,7 @@ pageSize来控制每页返回数据的行数，pageNum来控制第几页
 ---
 
 
-## 8. 删除 Document <a id="8"></a>
+## 删除 Delete Document
 
 删除年龄为35的一个用户. <br />
 注册 "age" 前面的 "\*", 表示查询条件.
