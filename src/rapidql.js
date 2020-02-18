@@ -1,23 +1,23 @@
-var mongodb = require("mongodb").MongoClient;
+var mongoose = require("mongoose");
 
-function RapidQL(options) {
-  this.collections = [];
-  this.db = async () => {
-    try {
-      var connection = await mongodb.connect(options.url, {
-        useNewUrlParser: true
-      });
-      return connection.db(options.database);
-    } catch (err) {
-      throw err;
-    }
-  };
+module.exports = function RapidQL(options) {
+  mongoose.connect(options.url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  });
+  var db = mongoose.connection;
+  db.on("error", console.error.bind(console, "connection error:"));
+  db.once("open", function() {
+    console.log("connected");
+  });
 
-  this.define = async (collection, fields) => {
-    this.collections.push(collection);
-    (await this.db()).createCollection(collection, function(err, res) {
-      if (err) throw err;
-      console.log("Create collection " + collection);
+  //Save all models
+  var models = [];
+  this.define = opt => {
+    models.push({
+      name: opt.model,
+      model: mongoose.model(opt.model, new mongoose.Schema(opt.schema)),
+      description: opt.description
     });
   };
 
@@ -35,43 +35,22 @@ function RapidQL(options) {
     heads.forEach(async item => {
       var t = item.split(" "); // ["create", "user"]
       var method = t[0];
-      var collection = t[1];
+      var collection = models.filter(value => {
+        return value.name === t[1];
+      })[0].model;
       var document = query[item]; // {name: "tt"}
-      var col = (await this.db()).collection(collection);
 
       switch (method) {
         case "create":
-          //if the collection is not exist.
-          //it wont create a new collection
-          //create document only the collection has defined.
-          if (this.collections.includes(collection)) {
-            if (document.length > 1) {
-              col.insertMany(document, (err, res) => {
-                if (err) throw err;
-                var result = {
-                  data: res.ops,
-                  msg: res.result
-                };
-                console.log(result);
-              });
-            } else {
-              col.insertOne(document, (err, res) => {
-                if (err) throw err;
-                var result = {
-                  data: res.ops,
-                  msg: res.result
-                };
-                console.log(result);
-              });
-            }
-          } else {
-            throw new Error("the collection does not exist.");
-          }
+          collection.create(document, (err, res) => {
+            if (err) throw err;
+            console.log(res);
+          });
 
           break;
 
         case "query":
-          col.find(document).toArray((err, res) => {
+          collection.find(document, (err, res) => {
             if (err) throw err;
             console.log(res);
           });
@@ -80,6 +59,7 @@ function RapidQL(options) {
         case "update":
           var condition = {};
           var data = {};
+
           Object.keys(document).forEach(item => {
             if (item.includes("*")) {
               condition[item.replace("*", "")] = document[item];
@@ -87,53 +67,24 @@ function RapidQL(options) {
               data[item] = document[item];
             }
           });
-          col.updateMany(
-            condition,
-            {
-              $set: data
-            },
-            (err, res) => {
-              if (err) throw err;
-              console.log(res.result);
-            }
-          );
+
+          collection.updateMany(condition, data, (err, res) => {
+            if (err) throw err;
+            console.log(res);
+          });
           break;
 
         case "delete":
-          col.deleteOne(document, (err, res) => {
+          var condition = {};
+          Object.keys(document).forEach(item => {
+            condition[item.replace("*", "")] = document[item];
+          });
+          collection.deleteMany(condition, (err, res) => {
             if (err) throw err;
-            console.log(res.result);
+            console.log(res);
           });
           break;
       }
     });
   };
-}
-
-var rapid = new RapidQL({
-  url: "mongodb://localhost:27017",
-  database: "rapid"
-});
-
-rapid.define("user", {
-  name: "姓名"
-});
-
-rapid.query({
-  "create user": [
-    {
-      name: "a1s",
-      tt: {
-        kill: 17,
-        active: false
-      }
-    },
-    {
-      name: "a2s",
-      tt: {
-        kill: 17,
-        active: false
-      }
-    }
-  ]
-});
+};
