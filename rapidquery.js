@@ -21,70 +21,80 @@ module.exports = function RapidQuery(options) {
     });
   };
 
+  var result;
+  //Query
   this.query = query => {
-    var heads = Object.keys(query);
+    return new Promise((resolve, reject) => {
+      var heads = Object.keys(query);
+      /**
+       * eg.
+       * {
+       *    "create user": {
+       *        name: "tt"
+       *    }
+       * }
+       */
+      heads.forEach(async item => {
+        var t = item.split(" "); // ["create", "user"]
+        var method = t[0];
+        var collection = models.filter(value => {
+          return value.name === t[1];
+        })[0].model;
+        var document = query[item]; // {name: "tt"}
 
-    /**
-     * eg.
-     * {
-     *    "create user": {
-     *        name: "tt"
-     *    }
-     * }
-     */
-    heads.forEach(async item => {
-      var t = item.split(" "); // ["create", "user"]
-      var method = t[0];
-      var collection = models.filter(value => {
-        return value.name === t[1];
-      })[0].model;
-      var document = query[item]; // {name: "tt"}
+        switch (method) {
+          case "create":
+            collection.create(document, (err, res) => {
+              if (err) throw err;
+              resolve(res);
+            });
 
-      switch (method) {
-        case "create":
-          collection.create(document, (err, res) => {
-            if (err) throw err;
-            console.log(res);
-          });
+            break;
 
-          break;
+          case "query":
+            collection.find(document, (err, res) => {
+              if (err) throw err;
+              resolve(res);
+            });
+            break;
 
-        case "query":
-          collection.find(document, (err, res) => {
-            if (err) throw err;
-            console.log(res);
-          });
-          break;
+          case "update":
+            var condition = {};
+            var data = {};
 
-        case "update":
-          var condition = {};
-          var data = {};
+            Object.keys(document).forEach(item => {
+              if (item.includes("*")) {
+                condition[item.replace("*", "")] = document[item];
+              } else {
+                data[item] = document[item];
+              }
+            });
 
-          Object.keys(document).forEach(item => {
-            if (item.includes("*")) {
+            collection.updateMany(condition, data, (err, res) => {
+              if (err) throw err;
+              resolve(res);
+            });
+            break;
+
+          case "delete":
+            var condition = {};
+            Object.keys(document).forEach(item => {
               condition[item.replace("*", "")] = document[item];
-            } else {
-              data[item] = document[item];
-            }
-          });
+            });
+            collection.deleteMany(condition, (err, res) => {
+              if (err) throw err;
+              resolve(res);
+            });
+            break;
+        }
+      });
+    });
+  };
 
-          collection.updateMany(condition, data, (err, res) => {
-            if (err) throw err;
-            console.log(res);
-          });
-          break;
-
-        case "delete":
-          var condition = {};
-          Object.keys(document).forEach(item => {
-            condition[item.replace("*", "")] = document[item];
-          });
-          collection.deleteMany(condition, (err, res) => {
-            if (err) throw err;
-            console.log(res);
-          });
-          break;
-      }
+  //Middleware
+  this.expressMiddleware = (req, res) => {
+    this.query(JSON.parse(req.query.query)).then(data => {
+      res.send(data);
     });
   };
 };
