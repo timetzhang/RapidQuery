@@ -1,7 +1,5 @@
-const RapidQL = require("./rapidql");
-var mongoose = require("mongoose");
-
-var rapid = new RapidQL({
+const RapidQuery = require("./rapidquery");
+var rapid = new RapidQuery({
   url: "mongodb://localhost:27017/rapid"
 });
 
@@ -45,13 +43,13 @@ rapid.define({
 //   }
 // });
 
-// rapid.query({
-//   "query users": {
-//     age: {
-//       $lt: 25
-//     }
-//   }
-// });
+rapid.query({
+  "query users": {
+    age: {
+      $lt: 25
+    }
+  }
+});
 
 // rapid.query({
 //   "query users": {
@@ -66,8 +64,8 @@ rapid.define({
 //   }
 // });
 
-rapid.query({
-  "delete users": {
-    "*age": 35
-  }
-});
+// rapid.query({
+//   "delete users": {
+//     "*age": 35
+//   }
+// });

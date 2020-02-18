@@ -1,5 +1,23 @@
 {
   "dependencies": {
+    "express": "^4.17.1",
     "mongoose": "^5.9.1"
-  }
+  },
+  "name": "rapidquery",
+  "description": "an API protocol with json style to CRUD mongdo database. use only one api url.",
+  "version": "0.0.2",
+  "main": "rapidquery",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/timetzhang/RapidQL.git"
+  },
+  "keywords": [
+    "API"
+  ],
+  "author": "tt",
+  "license": "MIT"
 }

@@ -1,6 +1,6 @@
 var mongoose = require("mongoose");
 
-module.exports = function RapidQL(options) {
+module.exports = function RapidQuery(options) {
   mongoose.connect(options.url, {
     useNewUrlParser: true,
     useUnifiedTopology: true
