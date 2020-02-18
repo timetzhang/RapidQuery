@@ -9,12 +9,12 @@
 ### [4. 定义Model](#%e5%ae%9a%e4%b9%89-model)
 ### [5. 创建Document](#%e5%88%9b%e5%bb%ba-document)
 ### [6. 查询Document](#%e6%9f%a5%e8%af%a2-document)
-* #### [查询](#%e6%9f%a5%e8%af%a2%e5%90%8d%e5%ad%97%e5%8f%abtt%e7%9a%84%e7%94%a8%e6%88%b7)
-* #### [使用 比较运算符](#%e4%bd%bf%e7%94%a8-b%e6%af%94%e8%be%83%e8%bf%90%e7%ae%97%e7%ac%a6b)
-* #### [使用 逻辑运算符](#%e4%bd%bf%e7%94%a8-b%e9%80%bb%e8%be%91%e8%bf%90%e7%ae%97%e7%ac%a6b-logical-operators)
-* #### [使用 正则表达式 进行 模糊查询](#%e4%bd%bf%e7%94%a8-%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f-%e8%bf%9b%e8%a1%8c-b%e6%a8%a1%e7%b3%8a%e6%9f%a5%e8%af%a2b)
-* #### [排序](#b%e6%8e%92%e5%ba%8fb)
-* #### [pageNum 和 pageSize](#pagesize-%e5%92%8c-pagenum)
+* #### [查询](#query)
+* #### [使用 比较运算符](#comparison-operatiors-%e4%bd%bf%e7%94%a8-b%e6%af%94%e8%be%83%e8%bf%90%e7%ae%97%e7%ac%a6b)
+* #### [使用 逻辑运算符](#logical-operators-%e4%bd%bf%e7%94%a8-b%e9%80%bb%e8%be%91%e8%bf%90%e7%ae%97%e7%ac%a6b)
+* #### [使用 正则表达式 进行 模糊查询](#regular-expression-%e4%bd%bf%e7%94%a8-%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f-%e8%bf%9b%e8%a1%8c-b%e6%a8%a1%e7%b3%8a%e6%9f%a5%e8%af%a2b)
+* #### [排序](#order-b%e6%8e%92%e5%ba%8fb)
+* #### [pageSize 和 pageNum](#pagesize-%e5%92%8c-pagenum)
 ### [7. 更改Document](#%e6%9b%b4%e6%94%b9-update-document)
 ### [8. 删除Document](#%e5%88%a0%e9%99%a4-delete-document)
 
@@ -171,7 +171,7 @@ http://localhost:8080/rapidquery?query={"create user":{"firstname":"tt"}}
 
 ## 查询 Document
 
-### 查询名字叫tt的用户
+### Query
 ```keys
 {
   "query users": {
@@ -195,7 +195,7 @@ http://localhost:8080/rapidquery?query={"create user":{"firstname":"tt"}}
 ```
 <br />
 
-### 使用 <b>比较运算符</b> 
+### Comparison Operatiors 使用 <b>比较运算符</b> 
 
 ```keys
 {
@@ -232,7 +232,7 @@ $ne: not equal       不等于
 
 <br />
 
-### 使用 <b>逻辑运算符</b> Logical Operators
+### Logical Operators 使用 <b>逻辑运算符</b> 
 
 ```keys
 {
@@ -247,7 +247,7 @@ $ne: not equal       不等于
 
 <br />
 
-### 使用 正则表达式 进行 <b>模糊查询</b>
+### Regular Expression 使用 正则表达式 进行 <b>模糊查询</b>
 
 ```key
 {
@@ -258,7 +258,7 @@ $ne: not equal       不等于
 ```
 <br />
 
-### <b>排序</b>
+### Order <b>排序</b>
 
 按年龄进行倒序
 ```keys
