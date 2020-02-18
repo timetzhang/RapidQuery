@@ -2,10 +2,15 @@
 
 ### Ver 0.1a
 
-an API protocol with json style to CRUD mongdo database. use only one post api url. such as:
+an API protocol with json style to CRUD mongdo database. use only one POST or GET api url. such as:
 
 ```key
 http://localhost:8080/rapidql
+```
+
+## Installation
+```key
+npm install --save rapidquery
 ```
 
 ## Usage
@@ -35,6 +40,8 @@ app.use("/rapidquery", rapid.expressMiddleware);
 ```
 
 ## Define a new collection
+for more schema define, please visit: https://mongoosejs.com/docs/guide.html
+<br />for more Datatypes, please visit: https://mongoosejs.com/docs/schematypes.html
 ```key
 rapid.define({
   model: "users",
@@ -51,8 +58,15 @@ rapid.define({
 ```
 
 ## Create a document
+Post/Get the following code with param name: "query"
 ```key
-rapid.query({
+http://localhost:8080/rapidquery?query={"create user":{"firstname":"tt"}}
+```
+
+OR
+
+```key
+{
   "create users": {
     firstname: "tt",
     lastname: "zhang",
@@ -61,12 +75,12 @@ rapid.query({
       name: "UCLA"
     }
   }
-});
+}
 ```
 
 ## Create documents
 ```key
-rapid.query({
+{
   "create users": [
     {
       firstname: "tt",
@@ -85,18 +99,18 @@ rapid.query({
       }
     }
   ]
-});
+}
 ```
 
 ## Query a document
 
 Query a document with a <b>fixed string</b>
 ```keys
-rapid.query({
+{
   "query users": {
     firstname: "tt"
   }
-});
+}
 ```
 
 result:
@@ -116,13 +130,13 @@ result:
 
 Query a document with <b>comparison operator</b>
 ```keys
-rapid.query({
+{
   "query users": {
     age: {
       $lt: 25
     }
   }
-});
+}
 ```
 
 result:
@@ -141,14 +155,14 @@ result:
 
 Query a document with <b>logical operators</b>
 ```keys
-rapid.query({
+{
   "query users": {
     $or:[
       {age: 21},
       {age: 23}
     ]
   }
-});
+}
 ```
 
 result:
@@ -169,12 +183,12 @@ result:
 update the document where the firstname is tt. <br />
 using "*" before "firstname".
 ```keys
-rapid.query({
+{
   "update users": {
     "*firstname": "tt",
     age: 35
   }
-});
+}
 ```
 
 result:
@@ -186,9 +200,9 @@ result:
 update the document where the age is 35. <br />
 using "*" before "age".
 ```keys
-rapid.query({
+{
   "delete users": {
     "*age": 35
   }
-});
+}
 ```
