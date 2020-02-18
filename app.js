@@ -43,13 +43,20 @@ rapid.define({
 //   }
 // });
 
-rapid.query({
-  "query users": {
-    age: {
-      $lt: 25
+rapid
+  .query({
+    "query users": {
+      age: {
+        $lt: 25
+      },
+      order: {
+        age: -1
+      }
     }
-  }
-});
+  })
+  .then(res => {
+    console.log(res);
+  });
 
 // rapid.query({
 //   "query users": {

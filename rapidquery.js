@@ -1,3 +1,7 @@
+/**
+ * RapidQuery Main
+ * by Timet Zhang
+ */
 var mongoose = require("mongoose");
 
 module.exports = function RapidQuery(options) {
@@ -52,10 +56,20 @@ module.exports = function RapidQuery(options) {
             break;
 
           case "query":
-            collection.find(document, (err, res) => {
-              if (err) throw err;
-              resolve(res);
-            });
+            //order
+            if (document.order) {
+              var order = document.order;
+              delete document.order;
+            }
+
+            console.log(document);
+            collection
+              .find(document)
+              .sort(order)
+              .exec((err, res) => {
+                if (err) throw err;
+                resolve(res);
+              });
             break;
 
           case "update":
