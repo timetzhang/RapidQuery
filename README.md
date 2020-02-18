@@ -15,6 +15,7 @@
 * #### [使用 正则表达式 进行 模糊查询](#6-4-regular-expression)
 * #### [排序](#6-5-order)
 * #### [pageSize 和 pageNum](#6-6-pagesize-and-pagenum)
+* #### [过滤查询字段](#6-7-select)
 ### [更改Document](#7-update-document)
 ### [删除Document](#8-delete-document)
 
