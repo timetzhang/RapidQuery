@@ -18,8 +18,20 @@ var rapid = new RapidQuery({
 });
 ```
 
+Use GET(Express):
 ```key
-const bodyParser = require("body-parser");
+app.use("/rapidquery", rapid.expressMiddleware);
+```
+
+Use POST(Express):
+```key
+app.use(
+  bodyParser.urlencoded({
+    limit: "50mb",
+    extended: true
+  })
+);
+app.use("/rapidquery", rapid.expressMiddleware);
 ```
 
 ## Define a new collection
