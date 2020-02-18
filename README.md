@@ -174,6 +174,7 @@ http://localhost:8080/rapidquery?query={"create user":{"firstname":"tt"}}
 ## 查询 Document
 
 ### 6-1-Query
+查询名为"tt"的user
 ```keys
 {
   "query users": {
@@ -195,6 +196,15 @@ http://localhost:8080/rapidquery?query={"create user":{"firstname":"tt"}}
   }
 ]
 ```
+
+查询所有Users
+```keys
+{
+  "query users": {
+  }
+}
+```
+
 <br />
 
 ### 6-2-Comparison Operatiors 
@@ -270,7 +280,7 @@ $ne: not equal       不等于
 ```keys
 {
   "query users": {
-    order:{
+    $order:{
       age: -1
     }
   }
@@ -288,8 +298,21 @@ pageSize来控制每页返回数据的行数，pageNum来控制第几页
 {
   "query users": {
     firstname: /t/,
-    pageSize: 1,
-    pageNum: 1
+    $pageSize: 1,
+    $pageNum: 1
+  }
+}
+```
+
+### 6-7-Select
+### 过滤查询字段
+  
+$select可以选择只要查询的字段
+
+```key
+{
+  "query users": {
+    $select:"firstname age school.name"
   }
 }
 ```
@@ -300,11 +323,11 @@ pageSize来控制每页返回数据的行数，pageNum来控制第几页
 ## 更改 Document
 
 更新名字为 "tt" 的用户的年龄为 35<br />
-注意：使用 "firstname" 前面有个 <b>"\*"</b>, 表示查询条件.
+注意：使用 "firstname" 前面有个 <b>"\$"</b>, 表示查询条件.
 ```keys
 {
   "update users": {
-    "*firstname": "tt",
+    $firstname: "tt",
     age: 35
   }
 }
@@ -322,11 +345,11 @@ pageSize来控制每页返回数据的行数，pageNum来控制第几页
 ## 删除 Document
 
 删除年龄为35的一个用户. <br />
-注册 "age" 前面的 "\*", 表示查询条件.
+注册 "age" 前面的 "\$", 表示查询条件.
 ```keys
 {
   "delete users": {
-    "*age": 35
+    $age: 35
   }
 }
 ```

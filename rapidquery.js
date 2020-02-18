@@ -57,26 +57,33 @@ module.exports = function RapidQuery(options) {
 
           case "query":
             //order
-            if (document.order) {
-              var order = document.order;
-              delete document.order;
+            if (document.$order) {
+              var order = document.$order;
+              delete document.$order;
             }
 
             //skip and limit
-            if (document.pageSize && document.pageNum) {
-              var limit = parseInt(document.pageSize);
+            if (document.$pageSize && document.$pageNum) {
+              var limit = parseInt(document.$pageSize);
               var skip =
-                parseInt(document.pageSize) * (parseInt(document.pageNum) - 1);
-              delete document.pageSize;
-              delete document.pageNum;
+                parseInt(document.$pageSize) *
+                (parseInt(document.$pageNum) - 1);
+              delete document.$pageSize;
+              delete document.$pageNum;
             }
 
-            console.log(document);
+            //select
+            if (document.$select) {
+              var select = document.$select;
+              delete document.$select;
+            }
+
             collection
               .find(document)
               .sort(order)
               .skip(skip)
               .limit(limit)
+              .select(select)
               .exec((err, res) => {
                 if (err) throw err;
                 resolve(res);
@@ -88,8 +95,8 @@ module.exports = function RapidQuery(options) {
             var data = {};
 
             Object.keys(document).forEach(item => {
-              if (item.includes("*")) {
-                condition[item.replace("*", "")] = document[item];
+              if (item.includes("$")) {
+                condition[item.replace("$", "")] = document[item];
               } else {
                 data[item] = document[item];
               }
@@ -104,7 +111,7 @@ module.exports = function RapidQuery(options) {
           case "delete":
             var condition = {};
             Object.keys(document).forEach(item => {
-              condition[item.replace("*", "")] = document[item];
+              condition[item.replace("$", "")] = document[item];
             });
             collection.deleteMany(condition, (err, res) => {
               if (err) throw err;

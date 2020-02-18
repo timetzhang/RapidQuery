@@ -43,16 +43,16 @@ rapid.define({
 //   }
 // });
 
-rapid
-  .query({
-    "query users": {
-      pageSize: 1,
-      pageNum: 2
-    }
-  })
-  .then(res => {
-    console.log(res);
-  });
+// rapid
+//   .query({
+//     "query users": {
+//       $pageSize: 1,
+//       $pageNum: 2
+//     }
+//   })
+//   .then(res => {
+//     console.log(res);
+//   });
 
 // rapid.query({
 //   "query users": {
@@ -69,6 +69,25 @@ rapid
 
 // rapid.query({
 //   "delete users": {
-//     "*age": 35
+//     $age: 29
 //   }
 // });
+
+rapid
+  .query({
+    "query users": {}
+  })
+  .then(res => {
+    console.log(res);
+  });
+
+// rapid
+//   .query({
+//     "update users": {
+//       $age: 23,
+//       firstname: "Ter"
+//     }
+//   })
+//   .then(res => {
+//     console.log(res);
+//   });
