@@ -241,7 +241,7 @@ $ne: not equal       不等于
 
 * 使用 正则表达式 进行 <b>模糊查询</b><a id="6-4"></a> 
 
-```keys
+```key
 {
   "query users": {
     firstname: /t/
@@ -251,7 +251,8 @@ $ne: not equal       不等于
 <br />
 
 * <b>排序</b><a id="6-5"></a> 
-<br />
+
+
 按年龄进行倒序
 ```keys
 {
