@@ -3,7 +3,7 @@
 #### Ver 0.1a
 
 ## Content
-### [1. Intro](#1-intro-content)
+### [1. Intro](#intro)
 ### [2. Installation]
 ### [3. Usage]
 ### [4. 定义Model]
@@ -20,7 +20,7 @@
 
 ----
 
-##  1. Intro <content>
+##  Intro
 
 
 
