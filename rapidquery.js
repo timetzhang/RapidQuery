@@ -93,8 +93,16 @@ module.exports = function RapidQuery(options) {
 
   //Middleware
   this.expressMiddleware = (req, res) => {
-    this.query(JSON.parse(req.query.query)).then(data => {
-      res.send(data);
-    });
+    if (JSON.stringify(req.body) != "{}") {
+      this.query(JSON.parse(req.body.query)).then(data => {
+        res.send(data);
+      });
+    }
+
+    if (JSON.stringify(req.query) != "{}") {
+      this.query(JSON.parse(req.query.query)).then(data => {
+        res.send(data);
+      });
+    }
   };
 };

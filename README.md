@@ -11,11 +11,15 @@ http://localhost:8080/rapidql
 ## Usage
 
 ```key
-const RapidQL = require("./rapidql");
+const RapidQuery = require("rapidquery");
 
-var rapid = new RapidQL({
+var rapid = new RapidQuery({
   url: "mongodb://localhost:27017/rapid"
 });
+```
+
+```key
+const bodyParser = require("body-parser");
 ```
 
 ## Define a new collection
