@@ -1,4 +1,4 @@
-# Rapid QL
+# RapidQuery
 
 ### Ver 0.1a
 
