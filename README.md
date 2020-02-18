@@ -3,26 +3,24 @@
 #### Ver 0.1a
 
 ## Content
-### [1. Intro](#intro)
-### [2. Installation](#installation)
-### [3. Usage](#usage)
-### [4. 定义Model](#%e5%ae%9a%e4%b9%89-model)
-### [5. 创建Document](#%e5%88%9b%e5%bb%ba-document)
-### [6. 查询Document](#%e6%9f%a5%e8%af%a2-document)
-* #### [查询](#query)
-* #### [使用 比较运算符](###comparison-operatiors-%e4%bd%bf%e7%94%a8-b%e6%af%94%e8%be%83%e8%bf%90%e7%ae%97%e7%ac%a6b)
-* #### [使用 逻辑运算符](#logical-operators-%e4%bd%bf%e7%94%a8-b%e9%80%bb%e8%be%91%e8%bf%90%e7%ae%97%e7%ac%a6b)
-* #### [使用 正则表达式 进行 模糊查询](#regular-expression-%e4%bd%bf%e7%94%a8-%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f-%e8%bf%9b%e8%a1%8c-b%e6%a8%a1%e7%b3%8a%e6%9f%a5%e8%af%a2b)
-* #### [排序](#order-b%e6%8e%92%e5%ba%8fb)
-* #### [pageSize 和 pageNum](#pagesize-%e5%92%8c-pagenum)
-### [7. 更改Document](#%e6%9b%b4%e6%94%b9-update-document)
-### [8. 删除Document](#%e5%88%a0%e9%99%a4-delete-document)
+### [Intro](#1-intro)
+### [Installation](#2-installation)
+### [Usage](#3-Usage)
+### [定义Model](#4-define-a-model)
+### [创建Document](#5-create-a-document)
+### [查询Document](#6-query-documents)
+* #### [查询](#6-1-query)
+* #### [使用 比较运算符](#6-2-comparison-operatiors)
+* #### [使用 逻辑运算符](#6-3-logical-operators)
+* #### [使用 正则表达式 进行 模糊查询](#6-4-regular-expression)
+* #### [排序](#6-5-order)
+* #### [pageSize 和 pageNum](#6-6-pagesize-and-pagenum)
+### [更改Document](#7-update-document)
+### [删除Document](#8-delete-document)
 
 ----
 
-##  Intro
-
-
+## 1-Intro
 
 一种使用JSON来查询API的接口协议，前端只需要GET/POST发送JSON到一个地址（比如下面这个API地址），就可以与MongoDB数据库进行CRUD。
 
@@ -49,7 +47,7 @@ http://localhost:8080/rapidql
 ```
 ---
 
-## Installation
+## 2-Installation
 ```key
 npm install --save rapidquery
 ```
@@ -61,7 +59,7 @@ cnpm install --save rapidquery
 
 ---
 
-## Usage
+## 3-Usage
 
 ```key
 const RapidQuery = require("rapidquery");
@@ -95,6 +93,7 @@ app.use("/rapidquery", rapid.expressMiddleware);
 
 ---
 
+## 4-Define a Model
 ## 定义 Model
 
 for more schema define, please visit: https://mongoosejs.com/docs/guide.html
@@ -121,6 +120,8 @@ rapid.define({
 ---
 
 
+
+## 5-Create a document
 ## 创建 Document
 
 使用GET方法:
@@ -142,7 +143,7 @@ http://localhost:8080/rapidquery?query={"create user":{"firstname":"tt"}}
   }
 }
 ```
-创建多个documents
+### 创建多个documents
 ```key
 {
   "create users": [
@@ -169,9 +170,10 @@ http://localhost:8080/rapidquery?query={"create user":{"firstname":"tt"}}
 ---
 
 
+## 6-Query documents
 ## 查询 Document
 
-### Query
+### 6-1-Query
 ```keys
 {
   "query users": {
@@ -195,7 +197,8 @@ http://localhost:8080/rapidquery?query={"create user":{"firstname":"tt"}}
 ```
 <br />
 
-### Comparison Operatiors 使用 <b>比较运算符</b> 
+### 6-2-Comparison Operatiors 
+### 使用 <b>比较运算符</b> 
 
 ```keys
 {
@@ -232,7 +235,8 @@ $ne: not equal       不等于
 
 <br />
 
-### Logical Operators 使用 <b>逻辑运算符</b> 
+### 6-3-Logical Operators 
+### 使用 <b>逻辑运算符</b> 
 
 ```keys
 {
@@ -247,7 +251,8 @@ $ne: not equal       不等于
 
 <br />
 
-### Regular Expression 使用 正则表达式 进行 <b>模糊查询</b>
+### 6-4-Regular Expression 
+### 使用 正则表达式 进行 <b>模糊查询</b>
 
 ```key
 {
@@ -258,7 +263,8 @@ $ne: not equal       不等于
 ```
 <br />
 
-### Order <b>排序</b>
+### 6-5-Order 
+### <b>排序</b>
 
 按年龄进行倒序
 ```keys
@@ -272,7 +278,7 @@ $ne: not equal       不等于
 ```
 <br />
 
-### PageSize 和 PageNum
+### 6-6-PageSize and PageNum
   
 pageSize来控制每页返回数据的行数，pageNum来控制第几页
 
@@ -290,7 +296,8 @@ pageSize来控制每页返回数据的行数，pageNum来控制第几页
 
 ---
 
-## 更改 Update Document
+## 7-Update Document
+## 更改 Document
 
 更新名字为 "tt" 的用户的年龄为 35<br />
 注意：使用 "firstname" 前面有个 <b>"\*"</b>, 表示查询条件.
@@ -311,7 +318,8 @@ pageSize来控制每页返回数据的行数，pageNum来控制第几页
 ---
 
 
-## 删除 Delete Document
+## 8-Delete Document
+## 删除 Document
 
 删除年龄为35的一个用户. <br />
 注册 "age" 前面的 "\*", 表示查询条件.
