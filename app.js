@@ -46,12 +46,8 @@ rapid.define({
 rapid
   .query({
     "query users": {
-      age: {
-        $lt: 25
-      },
-      order: {
-        age: -1
-      }
+      pageSize: 1,
+      pageNum: 2
     }
   })
   .then(res => {

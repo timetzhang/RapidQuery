@@ -3,24 +3,26 @@
 #### Ver 0.1a
 
 ## Content
-### <a href="#1">1. Intro</a>
-### <a href="#2">2. Installation</a>
-### <a href="#3">3. Usage</a>
-### <a href="#4">4. 定义Model</a>
-### <a href="#5">5. 创建Document</a>
-### <a href="#6">6. 查询Document</a>
+### [1. Intro](#1-intro-content)
+### [2. Installation]
+### [3. Usage]
+### [4. 定义Model]
+### [5. 创建Document]
+### [6. 查询Document]
 * #### <a href="#6-1">查询</a>
 * #### <a href="#6-2">使用 比较运算符</a>
 * #### <a href="#6-3">使用 逻辑运算符</a>
 * #### <a href="#6-4">使用 正则表达式 进行 模糊查询</a>
-* #### <a href="#6-4">排序</a>
-
-
+* #### <a href="#6-5">排序</a>
+* #### <a href="#6-6">pageNum 和 pageSize</a
 ### <a href="#7">7. 更改Document</a>
 ### <a href="#8">8. 删除Document</a>
-<br />
 
-##  1. Intro <a id="1"></a>
+----
+
+##  1. Intro <content>
+
+
 
 一种使用JSON来查询API的接口协议，前端只需要GET/POST发送JSON到一个地址（比如下面这个API地址），就可以与MongoDB数据库进行CRUD。
 
@@ -45,7 +47,7 @@ http://localhost:8080/rapidql
   gender: "male"
 }]
 ```
-<br />
+---
 
 ## 2. Installation <a id="2"></a>
 ```key
@@ -56,7 +58,8 @@ npm install --save rapidquery
 ```key
 cnpm install --save rapidquery
 ```
-<br />
+
+---
 
 ## 3. Usage <a id="3"></a>
 
@@ -89,7 +92,8 @@ app.use(
 );
 app.use("/rapidquery", rapid.expressMiddleware);
 ```
-<br />
+
+---
 
 ## 4. 定义 Model <a id="4"></a>
 
@@ -113,7 +117,9 @@ rapid.define({
   }
 });
 ```
-<br />
+
+---
+
 
 ## 5. 创建 Document <a id="5"></a>
 
@@ -160,7 +166,8 @@ http://localhost:8080/rapidquery?query={"create user":{"firstname":"tt"}}
 }
 ```
 
-<br />
+---
+
 
 ## 6. 查询 Document <a id="6"></a>
 
@@ -252,7 +259,6 @@ $ne: not equal       不等于
 
 * <b>排序</b><a id="6-5"></a> 
 
-
 按年龄进行倒序
 ```keys
 {
@@ -263,8 +269,25 @@ $ne: not equal       不等于
   }
 }
 ```
-
 <br />
+
+* PageSize 和 PageNum <a id="6-6"></a>
+  
+pageSize来控制每页返回数据的行数，pageNum来控制第几页
+
+注意：pageNum从1开始，而不是0
+
+```key
+{
+  "query users": {
+    firstname: /t/,
+    pageSize: 1,
+    pageNum: 1
+  }
+}
+```
+
+---
 
 ## 7. 更改 Document <a id="7"></a>
 
@@ -283,7 +306,9 @@ $ne: not equal       不等于
 ```keys
 { n: 1, nModified: 1, ok: 1 }
 ```
-<br />
+
+---
+
 
 ## 8. 删除 Document <a id="8"></a>
 

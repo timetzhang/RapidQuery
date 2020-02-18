@@ -62,10 +62,21 @@ module.exports = function RapidQuery(options) {
               delete document.order;
             }
 
+            //skip and limit
+            if (document.pageSize && document.pageNum) {
+              var limit = parseInt(document.pageSize);
+              var skip =
+                parseInt(document.pageSize) * (parseInt(document.pageNum) - 1);
+              delete document.pageSize;
+              delete document.pageNum;
+            }
+
             console.log(document);
             collection
               .find(document)
               .sort(order)
+              .skip(skip)
+              .limit(limit)
               .exec((err, res) => {
                 if (err) throw err;
                 resolve(res);
