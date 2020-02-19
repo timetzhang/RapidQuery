@@ -16,6 +16,7 @@
 * #### [排序](#6-5-order)
 * #### [pageSize 和 pageNum](#6-6-pagesize-and-pagenum)
 * #### [过滤查询字段](#6-7-select)
+* #### [In和NotIn](#6-8-in-or-notin)
 ### [更改Document](#7-update-document)
 * #### [更改](#7-1-update)
 * #### [将数值添加到数组](#7-2-push)
