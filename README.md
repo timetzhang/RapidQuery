@@ -328,11 +328,9 @@ $in:
 
 ```keys
 {
-  {
-    "query users": {
-      "school.name": {
-        $in: ["MIT"]
-      }
+  "query users": {
+    "school.name": {
+      $in: ["MIT"]
     }
   }
 }
