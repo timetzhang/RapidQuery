@@ -84,10 +84,9 @@ rapid.define({
 
 rapid
   .query({
-    "update users": {
-      age: 35,
-      $update: {
-        firstname: "tt"
+    "query users": {
+      "school.name": {
+        $nin: ["MIT"]
       }
     }
   })

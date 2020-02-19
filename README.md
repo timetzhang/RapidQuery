@@ -320,6 +320,33 @@ $select可以选择只要查询的字段
 }
 ```
 
+### 6-8-In or NotIn
+### 使用 <b>In 和 NotIn</b> 
+
+$in:
+
+```keys
+{
+  {
+    "query users": {
+      "school.name": {
+        $in: ["MIT"]
+      }
+    }
+  }
+}
+```
+
+$nin:
+```keys
+{
+  "query users": {
+    "school.name": {
+      $nin: ["UCLA"]
+    }
+  }
+}
+```
 ---
 
 ## 7-Update Document
