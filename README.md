@@ -307,6 +307,7 @@ pageSize来控制每页返回数据的行数，pageNum来控制第几页
   }
 }
 ```
+<br />
 
 ### 6-7-Select
 ### 过滤查询字段
@@ -320,6 +321,7 @@ $select可以选择只要查询的字段
   }
 }
 ```
+<br />
 
 ### 6-8-In or NotIn
 ### 使用 <b>In 和 NotIn</b> 
@@ -346,7 +348,25 @@ $nin:
   }
 }
 ```
+<br />
+
+### 6-9-Count
+### 计数 
+
+使用 $count 计算学校名为MIT用户数量
+```keys
+{
+  "query users": {
+    "school.name": {
+      $in: ["MIT"]
+    },
+    $count: 1
+  }
+}
+```
+
 ---
+<br />
 
 ## 7-Update Document
 ## 更改 Document
@@ -370,6 +390,7 @@ $nin:
 ```keys
 { n: 1, nModified: 1, ok: 1 }
 ```
+<br />
 
 ### 7-2-Push
 ### 将数值添加到数组
@@ -409,6 +430,7 @@ rapid.define({
   }
 }
 ```
+<br />
 
 ### 7-3-Inc
 ### 增加某个数值
@@ -429,6 +451,7 @@ rapid.define({
 
 ---
 
+<br />
 
 ## 8-Delete Document
 ## 删除 Document

@@ -86,8 +86,9 @@ rapid
   .query({
     "query users": {
       "school.name": {
-        $nin: ["MIT"]
-      }
+        $nin: ["UCLA"]
+      },
+      $count: 1
     }
   })
   .then(res => {
