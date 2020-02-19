@@ -18,6 +18,7 @@
 * #### [过滤查询字段](#6-7-select)
 ### [更改Document](#7-update-document)
 * #### [更改](#7-1-update)
+* #### [将数值添加到数组](#7-2-push)
 ### [删除Document](#8-delete-document)
 
 ----
