@@ -69,6 +69,15 @@ module.exports = function RapidQuery(options) {
               break;
             }
 
+            //group
+            if (document.$aggregate) {
+              collection.aggregate(document.$aggregate).exec((err, res) => {
+                if (err) throw err;
+                resolve(res);
+              });
+              break;
+            }
+
             //order
             if (document.$order) {
               var order = document.$order;

@@ -85,9 +85,16 @@ rapid.define({
 rapid
   .query({
     "read users": {
-      age: {
-        $type: "array"
-      }
+      $group: [
+        {
+          $group: {
+            _id: "$lastname",
+            age: { $min: "$age" },
+            maxage: { $max: "$age" },
+            num: { $sum: 1 }
+          }
+        }
+      ]
     }
   })
   .then(res => {
