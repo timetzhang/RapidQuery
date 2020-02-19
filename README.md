@@ -9,7 +9,7 @@
 ### [定义Model](#4-define-a-model)
 ### [创建Document](#5-create-a-document)
 ### [查询Document](#6-query-documents)
-* #### [查询](#6-1-query)
+* #### [查询](#6-1-read)
 * #### [使用 比较运算符](#6-2-comparison-operatiors)
 * #### [使用 逻辑运算符](#6-3-logical-operators)
 * #### [使用 正则表达式 进行 模糊查询](#6-4-regular-expression)
@@ -32,7 +32,7 @@
 比如Post/Get下面这个JSON ：
 ```key
 {
-  "query user":{
+  "read user":{
     _id: 1
   }
 }
@@ -175,14 +175,14 @@ http://localhost:8080/rapidquery?query={"create user":{"firstname":"tt"}}
 ---
 
 
-## 6-Query documents
+## 6-Read documents
 ## 查询 Document
 
-### 6-1-Query
+### 6-1-Read
 查询名为"tt"的user
 ```keys
 {
-  "query users": {
+  "read users": {
     firstname: "tt"
   }
 }
@@ -205,7 +205,7 @@ http://localhost:8080/rapidquery?query={"create user":{"firstname":"tt"}}
 查询所有Users
 ```keys
 {
-  "query users": {
+  "read users": {
   }
 }
 ```
@@ -217,7 +217,7 @@ http://localhost:8080/rapidquery?query={"create user":{"firstname":"tt"}}
 
 ```keys
 {
-  "query users": {
+  "read users": {
     age: {
       $lt: 25
     }
@@ -255,7 +255,7 @@ $ne: not equal       不等于
 
 ```keys
 {
-  "query users": {
+  "read users": {
     $or:[
       {age: 21},
       {age: 23}
@@ -271,7 +271,7 @@ $ne: not equal       不等于
 
 ```key
 {
-  "query users": {
+  "read users": {
     firstname: /t/
   }
 }
@@ -284,7 +284,7 @@ $ne: not equal       不等于
 按年龄进行倒序
 ```keys
 {
-  "query users": {
+  "read users": {
     $order:{
       age: -1
     }
@@ -301,7 +301,7 @@ pageSize来控制每页返回数据的行数，pageNum来控制第几页
 
 ```key
 {
-  "query users": {
+  "read users": {
     firstname: /t/,
     $pageSize: 1,
     $pageNum: 1
@@ -317,7 +317,7 @@ $select可以选择只要查询的字段
 
 ```key
 {
-  "query users": {
+  "read users": {
     $select:"firstname age school.name"
   }
 }
@@ -331,7 +331,7 @@ $in:
 
 ```keys
 {
-  "query users": {
+  "read users": {
     "school.name": {
       $in: ["MIT"]
     }
@@ -342,7 +342,7 @@ $in:
 $nin:
 ```keys
 {
-  "query users": {
+  "read users": {
     "school.name": {
       $nin: ["UCLA"]
     }
@@ -357,7 +357,7 @@ $nin:
 使用 $count 计算学校名为MIT用户数量
 ```keys
 {
-  "query users": {
+  "read users": {
     "school.name": {
       $in: ["MIT"]
     },

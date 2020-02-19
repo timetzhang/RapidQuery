@@ -84,11 +84,10 @@ rapid.define({
 
 rapid
   .query({
-    "query users": {
-      "school.name": {
-        $nin: ["UCLA"]
-      },
-      $count: 1
+    "read users": {
+      age: {
+        $type: "array"
+      }
     }
   })
   .then(res => {

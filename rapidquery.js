@@ -55,13 +55,13 @@ module.exports = function RapidQuery(options) {
 
             break;
 
-          case "query":
+          case "read":
             //count
             if (document.$count) {
               delete document.$count;
               collection
                 .find(document)
-                .count()
+                .countDocuments()
                 .exec((err, res) => {
                   if (err) throw err;
                   resolve(res);
