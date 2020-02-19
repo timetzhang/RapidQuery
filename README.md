@@ -241,8 +241,8 @@ http://localhost:8080/rapidquery?query={"create user":{"firstname":"tt"}}
 ```key
 $gt: greater than    大于
 $lt: less than       小于
-$ge: greater equal   大于等于
-$le: less equal      小于等于
+$gte: greater than equal   大于等于
+$lte: less than equal      小于等于
 $ne: not equal       不等于
 ```
 
@@ -328,12 +328,14 @@ $select可以选择只要查询的字段
 ### 7-1-Update
 
 更新名字为 "tt" 的用户的年龄为 35<br />
-注意：使用 "firstname" 前面有个 <b>"\$"</b>, 表示查询条件.
+
 ```keys
 {
   "update users": {
-    $firstname: "tt",
-    age: 35
+    age: 35,
+    $update:{
+      firstname: "tt"
+    }
   }
 }
 ```
@@ -372,9 +374,28 @@ rapid.define({
 ```key
 {
   "update users": {
-    $firstname: "tt",
-    $push: {
-      cars: ["porsche", "ford f-150"]
+    firstname: "tt",
+    $update:{
+      $push: {
+        cars: ["porsche", "ford f-150"]
+      }
+    }
+  }
+}
+```
+
+### 7-3-Inc
+### 增加某个数值
+
+更改名字为 "tt" 的用户，age+1<br />
+```key
+{
+  "update users": {
+    firstname: "tt",
+    $update:{
+      $inc:{
+        age:1
+      }
     }
   }
 }

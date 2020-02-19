@@ -94,19 +94,10 @@ module.exports = function RapidQuery(options) {
             var condition = {};
             var data = {};
 
-            //push
-            if (document.$push) {
-              data.$push = document.$push;
-              delete document.$push;
-            }
+            data = document.$update;
+            delete document.$update;
 
-            Object.keys(document).forEach(item => {
-              if (item.includes("$")) {
-                condition[item.replace("$", "")] = document[item];
-              } else {
-                data[item] = document[item];
-              }
-            });
+            condition = document;
 
             collection.updateMany(condition, data, (err, res) => {
               if (err) throw err;

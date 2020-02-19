@@ -85,11 +85,10 @@ rapid.define({
 rapid
   .query({
     "update users": {
-      $age: 23,
-      $push: {
-        alias: ["a"]
-      },
-      firstname: "tt"
+      age: 35,
+      $update: {
+        firstname: "tt"
+      }
     }
   })
   .then(res => {
