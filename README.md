@@ -346,11 +346,10 @@ $select可以选择只要查询的字段
 ## 删除 Document
 
 删除年龄为35的一个用户. <br />
-注册 "age" 前面的 "\$", 表示查询条件.
 ```keys
 {
   "delete users": {
-    $age: 35
+    age: 35
   }
 }
 ```

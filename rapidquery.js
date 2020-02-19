@@ -5,6 +5,7 @@
 var mongoose = require("mongoose");
 
 module.exports = function RapidQuery(options) {
+  //Connect to the database
   mongoose.connect(options.url, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -15,8 +16,7 @@ module.exports = function RapidQuery(options) {
     console.log("connected");
   });
 
-  //Save all models
-  var models = [];
+  var models = []; //Save all models
   this.define = opt => {
     models.push({
       name: opt.model,
@@ -109,11 +109,7 @@ module.exports = function RapidQuery(options) {
             break;
 
           case "delete":
-            var condition = {};
-            Object.keys(document).forEach(item => {
-              condition[item.replace("$", "")] = document[item];
-            });
-            collection.deleteMany(condition, (err, res) => {
+            collection.deleteMany(document, (err, res) => {
               if (err) throw err;
               resolve(res);
             });
