@@ -94,6 +94,12 @@ module.exports = function RapidQuery(options) {
             var condition = {};
             var data = {};
 
+            //push
+            if (document.$push) {
+              data.$push = document.$push;
+              delete document.$push;
+            }
+
             Object.keys(document).forEach(item => {
               if (item.includes("$")) {
                 condition[item.replace("$", "")] = document[item];

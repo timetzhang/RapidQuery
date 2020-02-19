@@ -17,6 +17,7 @@
 * #### [pageSize 和 pageNum](#6-6-pagesize-and-pagenum)
 * #### [过滤查询字段](#6-7-select)
 ### [更改Document](#7-update-document)
+* #### [更改](#7-1-update)
 ### [删除Document](#8-delete-document)
 
 ----
@@ -323,6 +324,8 @@ $select可以选择只要查询的字段
 ## 7-Update Document
 ## 更改 Document
 
+### 7-1-Update
+
 更新名字为 "tt" 的用户的年龄为 35<br />
 注意：使用 "firstname" 前面有个 <b>"\$"</b>, 表示查询条件.
 ```keys
@@ -337,6 +340,43 @@ $select可以选择只要查询的字段
 结果:
 ```keys
 { n: 1, nModified: 1, ok: 1 }
+```
+
+### 7-2-Push
+### 将数值添加到数组
+
+更改名字为 "tt" 的用户<br />
+
+首先，将Users表添加一个新的数组字段Cars
+```key
+rapid.define({
+  model: "users",
+  description: "This is an user collection",
+  schema: {
+    firstname: String,
+    lastname: String,
+    age: Number,
+    cars: Array,
+    cellphone:{
+      type: String,
+      unique: true
+    }
+    school: {
+      name: String
+    }
+  }
+});
+```
+
+```key
+{
+  "update users": {
+    $firstname: "tt",
+    $push: {
+      cars: ["porsche", "ford f-150"]
+    }
+  }
+}
 ```
 
 ---

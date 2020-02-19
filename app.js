@@ -10,6 +10,7 @@ rapid.define({
     firstname: String,
     lastname: String,
     age: Number,
+    alias: Array,
     school: {
       name: String
     }
@@ -73,21 +74,24 @@ rapid.define({
 //   }
 // });
 
-rapid
-  .query({
-    "query users": {}
-  })
-  .then(res => {
-    console.log(res);
-  });
-
 // rapid
 //   .query({
-//     "update users": {
-//       $age: 23,
-//       firstname: "Ter"
-//     }
+//     "query users": {}
 //   })
 //   .then(res => {
 //     console.log(res);
 //   });
+
+rapid
+  .query({
+    "update users": {
+      $age: 23,
+      $push: {
+        alias: ["a"]
+      },
+      firstname: "tt"
+    }
+  })
+  .then(res => {
+    console.log(res);
+  });
