@@ -84,7 +84,7 @@ var rapid = new RapidQuery({
 
 在Express下使用GET
 ```key
-app.use("/rapidquery", rapid.expressMiddleware);
+app.use("/rapidquery", rapid.middleware.express);
 ```
 
 在Express下使用POST
@@ -95,7 +95,7 @@ app.use(
     extended: true
   })
 );
-app.use("/rapidquery", rapid.expressMiddleware);
+app.use("/rapidquery", rapid.middleware.express);
 ```
 
 ---

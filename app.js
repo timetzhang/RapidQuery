@@ -9,7 +9,7 @@ var users = rapid.define({
   fields: {
     id: {
       type: rapid.ObjectId,
-      default: rapid.newObjectId()
+      default: rapid.ObjectId()
     },
     firstname: String,
     lastname: String,
@@ -43,36 +43,37 @@ var users = rapid.define({
   }
 });
 
-rapid
-  .query({
-    "create users": [
-      {
-        firstname: "tt",
-        lastname: "zhang",
-        email: "asd@as.com",
-        age: 8,
-        school: {
-          name: "UCLA"
-        }
-      }
-    ]
-  })
-  .then(res => {
-    console.log(res);
-  })
-  .catch(err => {
-    console.log(err);
-  });
-
 // rapid
 //   .query({
-//     "read users": {
-//       firstname: "tt"
-//     }
+//     "create users": [
+//       {
+//         firstname: "tt",
+//         lastname: "zhang",
+//         email: "asd@as.com",
+//         age: 8,
+//         school: {
+//           name: "UCLA"
+//         }
+//       }
+//     ]
 //   })
 //   .then(res => {
 //     console.log(res);
+//   })
+//   .catch(err => {
+//     console.log(err);
 //   });
+
+rapid
+  .query({
+    "read users": {
+      firstname: "tt"
+    }
+  })
+  .then(res => {
+    console.log(res);
+    console.log(rapid.middleware.express);
+  });
 
 // rapid
 //   .query({
