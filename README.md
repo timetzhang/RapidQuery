@@ -29,7 +29,7 @@
 
 一种使用JSON来查询API的接口协议，前端只需要GET/POST发送JSON到一个地址（比如下面这个API地址），就可以与MongoDB数据库进行CRUD。
 
-比如Post/Get下面这个JSON ：
+比如Post/Get 下面这个JSON, 参数名为 "query"  ：
 ```key
 {
   "read user":{
