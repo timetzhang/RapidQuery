@@ -103,6 +103,30 @@ app.use("/rapidquery", rapid.expressMiddleware);
 ## 4-Define a Model
 ## 定义 Model
 
+定义一个超简单的 Model
+```key
+var users = rapid.define({
+  name: "users",
+  description: "用户数据",
+  fields: {
+    name: String,
+    email: String,
+    gender: String,
+    age: Number
+  }
+})
+```
+
+系统会自动添加以下字段
+```key
+_id
+meta:{
+  createdAt
+  updatedAt
+}
+```
+
+来定义一个较完整功能的
 ```key
 var users = rapid.define({
   name: "users",
