@@ -8,6 +8,7 @@
 ### [Usage](#3-Usage)
 ### [定义Model](#4-define-a-model)
 * #### [数据类型](#4-1-date-types)
+* #### [数据验证](#4-2-validation)
 ### [创建Document](#5-create-a-document)
 ### [查询Document](#6-query-documents)
 * #### [查询](#6-1-read)
@@ -207,7 +208,7 @@ max: Date 创建验证器检查属性是否小于或等于该Date
 
 因 ORM 部分采用的是 Mongoose 的代码，数据类型的详细说明, 请访问: http://www.mongoosejs.net/docs/schematypes.html
 
-### 4-1-Validation
+### 4-2-Validation
 ### 数据验证
 
 ```key
