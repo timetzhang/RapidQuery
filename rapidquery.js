@@ -3,8 +3,13 @@
  * by Timet Zhang
  */
 var mongoose = require("mongoose");
-
 module.exports = function RapidQuery(options) {
+  //type defines
+  this.ObjectId = mongoose.ObjectId;
+  this.newObjectId = () => {
+    return mongoose.Types.ObjectId().toString();
+  };
+
   //Connect to the database
   mongoose.connect(options.url, {
     useNewUrlParser: true,

@@ -7,6 +7,7 @@
 ### [Installation](#2-installation)
 ### [Usage](#3-Usage)
 ### [定义Model](#4-define-a-model)
+* #### [数据类型](#4-1-date-types)
 ### [创建Document](#5-create-a-document)
 ### [查询Document](#6-query-documents)
 * #### [查询](#6-1-read)
@@ -101,21 +102,27 @@ app.use("/rapidquery", rapid.expressMiddleware);
 ## 4-Define a Model
 ## 定义 Model
 
-关于Model的验证, 请访问: http://www.mongoosejs.net/docs/validation.html
-<br />更多的数据类型, 请访问: http://www.mongoosejs.net/docs/schematypes.html
 ```key
 var users = rapid.define({
   name: "users",
   description: "用户数据",
   fields: {
+    id: {
+      type: rapid.ObjectId,
+      default: rapid.newObjectId() //rapid.newObjectId()可以生成一段新的id
+    },
     firstname: String,
     lastname: String,
     email: {
       type: String,
       unique: true,
-      required: [true, "Email为必填项"],
+      lowercase: true, 
+      trim: true,
+      required: [true, "Email为必填项"],  //required说明该field不能为空
+      
+      //自定义验证
       validate: {
-        validator: value => {
+        validator: value => {   
           return /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(
             value
           );
@@ -123,13 +130,23 @@ var users = rapid.define({
         message: "{VALUE} 不是一个有效的Email地址!"
       }
     },
+    userType:{
+      type: String,
+      default: "学生",
+      enum:["学生","老师"]
+    },
     age: {
       type: Number,
       //数值验证, 最小值为15, 最大值为30
-      min: 6,
-      max: 12
+      min: 15,
+      max: [30, "年龄不能超过30岁"]
     },
-    alias: Array,
+    job:{
+      type: String,
+      required: function() {
+        return this.age > 23; //required可变, 比如当age大于23岁时, job才是必填项
+      }
+    },
     school: {
       name: String
     }
@@ -141,9 +158,83 @@ var users = rapid.define({
 });
 ```
 
+### 4-1-Date Types
+### 数据类型
+
+所有可用的数据类型
+```key
+String
+Number
+Date
+Buffer
+Boolean
+Mixed      // 一个啥都可以放的 SchemaType ， 虽然便利，但也会让数据难以维护。
+ObjectId   // 要指定类型为 ObjectId，在声明中使用 rapid.ObjectId。
+Array
+Decimal128
+```
+
+所有可用的选项
+```key
+所有类型相关
+required: 布尔值或函数 如果值为真，为此属性添加 required 验证器
+default: 任何值或函数 设置此路径默认值。如果是函数，函数返回值为默认值
+validate: 函数，自定义验证
+get: 函数 使用 Object.defineProperty() 定义自定义 getter
+set: 函数 使用 Object.defineProperty() 定义自定义 setter
+alias: 字符串 仅mongoose >= 4.10.0。 为该字段路径定义虚拟值 gets/sets
+
+索引相关
+index: 布尔值 是否对这个属性创建索引
+unique: 布尔值 是否对这个属性创建唯一索引
+sparse: 布尔值 是否对这个属性创建稀疏索引
+
+String相关
+lowercase: 布尔值 是否在保存前对此值调用 .toLowerCase()
+uppercase: 布尔值 是否在保存前对此值调用 .toUpperCase()
+trim: 布尔值 是否在保存前对此值调用 .trim()
+match: 正则表达式 创建验证器检查这个值是否匹配给定正则表达式
+enum: 数组 创建验证器检查这个值是否包含于给定数组
+
+Number相关
+min: 数值 创建验证器检查属性是否大于或等于该值
+max: 数值 创建验证器检查属性是否小于或等于该值
+
+Date相关
+min: Date 创建验证器检查属性是否大于或等于该Date
+max: Date 创建验证器检查属性是否小于或等于该Date
+```
+
+因 ORM 部分采用的是 Mongoose 的代码，数据类型的详细说明, 请访问: http://www.mongoosejs.net/docs/schematypes.html
+
+### 4-1-Validation
+### 数据验证
+
+```key
+validate: {
+  validator: (v) => {
+    return /\d{3}-\d{3}-\d{4}/.test(v);
+  },
+  message: '{VALUE} is not a valid phone number!'
+},
+```
+
+自定义检验器可以是异步的
+```key
+validate: (v) => {
+  return new Promise(function(resolve, reject) {
+    setTimeout(function() {
+      resolve(false);
+    }, 5);
+  });
+}
+```
+
+因 ORM 部分采用的是 Mongoose 的代码，关于验证的详细说明, 请访问: http://www.mongoosejs.net/docs/validation.html
+
 ---
 
-
+<br />
 
 ## 5-Create a document
 ## 创建 Document

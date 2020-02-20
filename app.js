@@ -7,6 +7,10 @@ var users = rapid.define({
   name: "users",
   description: "用户数据",
   fields: {
+    id: {
+      type: rapid.ObjectId,
+      default: rapid.newObjectId()
+    },
     firstname: String,
     lastname: String,
     email: {
@@ -45,7 +49,7 @@ rapid
       {
         firstname: "tt",
         lastname: "zhang",
-        email: "asd",
+        email: "asd@as.com",
         age: 8,
         school: {
           name: "UCLA"
