@@ -5,12 +5,26 @@ var rapid = new RapidQuery({
 
 var users = rapid.define({
   name: "users",
-  description: "this is an users model",
+  description: "用户数据",
   fields: {
     firstname: String,
     lastname: String,
+    email: {
+      type: String,
+      unique: true,
+      required: [true, "Email为必填项"],
+      validate: {
+        validator: value => {
+          return /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(
+            value
+          );
+        },
+        message: "{VALUE} 不是一个有效的Email地址!"
+      }
+    },
     age: {
       type: Number,
+      //数值验证, 最小值为15, 最大值为30
       min: 6,
       max: 12
     },
@@ -20,6 +34,7 @@ var users = rapid.define({
     }
   },
   options: {
+    timestamp: true, //可以不填，默认为true, model会自动添加 meta: {createdAt, updatedAt}
     discriminatorKey: "kind"
   }
 });
@@ -28,19 +43,12 @@ rapid
   .query({
     "create users": [
       {
-        firstname: "timet",
+        firstname: "tt",
         lastname: "zhang",
+        email: "asd",
         age: 8,
         school: {
           name: "UCLA"
-        }
-      },
-      {
-        firstname: "jinchuang",
-        lastname: "huang",
-        age: 10,
-        school: {
-          name: "MIT"
         }
       }
     ]
@@ -49,18 +57,18 @@ rapid
     console.log(res);
   })
   .catch(err => {
-    console.log(err.message);
+    console.log(err);
   });
 
-rapid
-  .query({
-    "read users": {
-      firstname: "tt"
-    }
-  })
-  .then(res => {
-    console.log(res);
-  });
+// rapid
+//   .query({
+//     "read users": {
+//       firstname: "tt"
+//     }
+//   })
+//   .then(res => {
+//     console.log(res);
+//   });
 
 // rapid
 //   .query({

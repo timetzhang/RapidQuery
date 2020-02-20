@@ -106,15 +106,28 @@ app.use("/rapidquery", rapid.expressMiddleware);
 ```key
 var users = rapid.define({
   name: "users",
-  description: "this is an users model",
+  description: "用户数据",
   fields: {
     firstname: String,
     lastname: String,
+    email: {
+      type: String,
+      unique: true,
+      required: [true, "Email为必填项"],
+      validate: {
+        validator: value => {
+          return /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(
+            value
+          );
+        },
+        message: "{VALUE} 不是一个有效的Email地址!"
+      }
+    },
     age: {
       type: Number,
       //数值验证, 最小值为15, 最大值为30
-      min: 15,
-      max: 30
+      min: 6,
+      max: 12
     },
     alias: Array,
     school: {
