@@ -6,8 +6,10 @@ var mongoose = require("mongoose");
 
 var models = [];
 module.exports = {
-  // all models are saved in here
-  models: models,
+  // return all models
+  getModels: () => {
+    return models;
+  },
   // define a new model
   define: opt => {
     //automatically add timestamp to meta.

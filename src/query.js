@@ -18,7 +18,7 @@ module.exports = query => {
     heads.forEach(async item => {
       var t = item.split(" "); // ["create", "user"]
       var method = t[0];
-      var collection = model.models.filter(value => {
+      var collection = model.getModels().filter(value => {
         return value.name === t[1];
       })[0].model;
 

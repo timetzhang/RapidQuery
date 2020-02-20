@@ -64,16 +64,16 @@ var users = rapid.define({
 //     console.log(err);
 //   });
 
-rapid
-  .query({
-    "read users": {
-      firstname: "tt"
-    }
-  })
-  .then(res => {
-    console.log(res);
-    console.log(rapid.middleware.express);
-  });
+// rapid
+//   .query({
+//     "read users": {
+//       firstname: "tt"
+//     }
+//   })
+//   .then(res => {
+//     console.log(res);
+//     console.log(rapid.middleware.express);
+//   });
 
 // rapid
 //   .query({

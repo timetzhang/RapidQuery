@@ -9,11 +9,13 @@ var query = require("./src/query");
 var middlewareExpress = require("./src/middleware/express");
 
 module.exports = function RapidQuery(options) {
+  //constructor
+  connect(options);
+
   //type defines
   this.ObjectId = mongoose.Types.ObjectId;
 
-  connect(options);
-
+  //model define
   this.define = model.define;
 
   //Query
