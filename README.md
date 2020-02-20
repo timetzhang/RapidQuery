@@ -101,23 +101,29 @@ app.use("/rapidquery", rapid.expressMiddleware);
 ## 4-Define a Model
 ## 定义 Model
 
-for more schema define, please visit: https://mongoosejs.com/docs/guide.html
-<br />for more Datatypes, please visit: https://mongoosejs.com/docs/schematypes.html
+关于Model的验证, 请访问: http://www.mongoosejs.net/docs/validation.html
+<br />更多的数据类型, 请访问: http://www.mongoosejs.net/docs/schematypes.html
 ```key
-rapid.define({
-  model: "users",
-  description: "This is an user collection",
-  schema: {
+var users = rapid.define({
+  name: "users",
+  description: "this is an users model",
+  fields: {
     firstname: String,
     lastname: String,
-    age: Number,
-    cellphone:{
-      type: String,
-      unique: true
-    }
+    age: {
+      type: Number,
+      //数值验证, 最小值为15, 最大值为30
+      min: 15,
+      max: 30
+    },
+    alias: Array,
     school: {
       name: String
     }
+  },
+  options: {
+    timestamp: true, //可以不填，默认为true, model会自动添加 meta: {createdAt, updatedAt}
+    discriminatorKey: "kind"
   }
 });
 ```

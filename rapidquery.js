@@ -18,11 +18,39 @@ module.exports = function RapidQuery(options) {
 
   var models = []; //Save all models
   this.define = opt => {
+    //automatically add timestamp to meta.
+    if (opt.options.timestamp || opt.options.timestamp == undefined) {
+      opt.fields.meta = {
+        createdAt: Date,
+        updatedAt: Date
+      };
+    }
+
+    var schema = new mongoose.Schema(opt.fields, opt.options);
+
+    //add time NOW to timestamp
+    if (opt.options.timestamp || opt.options.timestamp == undefined) {
+      //添加createdAt和updatedAt
+      schema.pre("save", function(next) {
+        // 每次保存之前都插入更新时间，创建时插入创建时间
+        if (this.isNew) {
+          this.meta.createdAt = this.meta.updatedAt = Date.now();
+        } else {
+          this.meta.updatedAt = Date.now();
+        }
+        next();
+      });
+    }
+
+    //use mongoose to deine a model.
+    var model = mongoose.model(opt.name, schema);
+
     models.push({
-      name: opt.model,
-      model: mongoose.model(opt.model, new mongoose.Schema(opt.schema)),
-      description: opt.description
+      name: opt.name,
+      description: opt.description,
+      model: model
     });
+    return model;
   };
 
   var result;
@@ -44,12 +72,13 @@ module.exports = function RapidQuery(options) {
         var collection = models.filter(value => {
           return value.name === t[1];
         })[0].model;
+
         var document = query[item]; // {name: "tt"}
 
         switch (method) {
           case "create":
             collection.create(document, (err, res) => {
-              if (err) throw err;
+              if (err) reject(err);
               resolve(res);
             });
 
@@ -72,7 +101,7 @@ module.exports = function RapidQuery(options) {
             //group
             if (document.$aggregate) {
               collection.aggregate(document.$aggregate).exec((err, res) => {
-                if (err) throw err;
+                if (err) reject(err);
                 resolve(res);
               });
               break;
@@ -107,7 +136,7 @@ module.exports = function RapidQuery(options) {
               .limit(limit)
               .select(select)
               .exec((err, res) => {
-                if (err) throw err;
+                if (err) reject(err);
                 resolve(res);
               });
             break;
@@ -122,14 +151,14 @@ module.exports = function RapidQuery(options) {
             condition = document;
 
             collection.updateMany(condition, data, (err, res) => {
-              if (err) throw err;
+              if (err) reject(err);
               resolve(res);
             });
             break;
 
           case "delete":
             collection.deleteMany(document, (err, res) => {
-              if (err) throw err;
+              if (err) reject(err);
               resolve(res);
             });
             break;

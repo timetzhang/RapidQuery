@@ -3,46 +3,64 @@ var rapid = new RapidQuery({
   url: "mongodb://localhost:27017/rapid"
 });
 
-rapid.define({
-  model: "users",
-  description: "This is an user collection",
-  schema: {
+var users = rapid.define({
+  name: "users",
+  description: "this is an users model",
+  fields: {
     firstname: String,
     lastname: String,
-    age: Number,
+    age: {
+      type: Number,
+      min: 6,
+      max: 12
+    },
     alias: Array,
     school: {
       name: String
     }
+  },
+  options: {
+    discriminatorKey: "kind"
   }
 });
 
-// rapid.query({
-//   "create users": [
-//     {
-//       firstname: "timet",
-//       lastname: "zhang",
-//       age: 29,
-//       school: {
-//         name: "UCLA"
-//       }
-//     },
-//     {
-//       firstname: "jinchuang",
-//       lastname: "huang",
-//       age: 21,
-//       school: {
-//         name: "MIT"
-//       }
-//     }
-//   ]
-// });
+rapid
+  .query({
+    "create users": [
+      {
+        firstname: "timet",
+        lastname: "zhang",
+        age: 8,
+        school: {
+          name: "UCLA"
+        }
+      },
+      {
+        firstname: "jinchuang",
+        lastname: "huang",
+        age: 10,
+        school: {
+          name: "MIT"
+        }
+      }
+    ]
+  })
+  .then(res => {
+    console.log(res);
+  })
+  .catch(err => {
+    console.log(err.message);
+  });
 
-// rapid.query({
-//   "query users": {
-//     firstname: "timet"
-//   }
-// });
+rapid
+  .query({
+    "read users": {
+      firstname: "tt"
+    }
+  })
+  .then(res => {
+    console.log(res);
+  });
 
 // rapid
 //   .query({
@@ -82,21 +100,21 @@ rapid.define({
 //     console.log(res);
 //   });
 
-rapid
-  .query({
-    "read users": {
-      $group: [
-        {
-          $group: {
-            _id: "$lastname",
-            age: { $min: "$age" },
-            maxage: { $max: "$age" },
-            num: { $sum: 1 }
-          }
-        }
-      ]
-    }
-  })
-  .then(res => {
-    console.log(res);
-  });
+// rapid
+//   .query({
+//     "read users": {
+//       $group: [
+//         {
+//           $group: {
+//             _id: "$lastname",
+//             age: { $min: "$age" },
+//             maxage: { $max: "$age" },
+//             num: { $sum: 1 }
+//           }
+//         }
+//       ]
+//     }
+//   })
+//   .then(res => {
+//     console.log(res);
+//   });
