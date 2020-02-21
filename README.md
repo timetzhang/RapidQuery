@@ -35,7 +35,7 @@
 ```key
 {
   "read user":{
-    _id: 1
+    id: 1
   }
 }
 ```
@@ -46,7 +46,7 @@ http://localhost:8080/rapidql
 就可以查询到数据
 ```key
 [{
-  _id: 1,
+  id: 1,
   name: "tt",
   age : 29,
   gender: "male"
