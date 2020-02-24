@@ -131,10 +131,8 @@ var users = rapid.define({
 系统会自动添加以下字段
 ```key
 _id
-meta:{
-  createdAt
-  updatedAt
-}
+createdAt
+updatedAt
 ```
 
 来定义一个较完整功能的
@@ -204,8 +202,8 @@ Number
 Date
 Buffer
 Boolean
-Mixed      // 一个啥都可以放的 SchemaType ， 虽然便利，但也会让数据难以维护。
-ObjectId   // 要指定类型为 ObjectId，在声明中使用 rapid.ObjectId。
+Mixed: 一个啥都可以放的 SchemaType ， 虽然便利，但也会让数据难以维护。
+ObjectId: 要指定类型为 ObjectId，在声明中使用 rapid.ObjectId。
 Array
 Decimal128
 ```
