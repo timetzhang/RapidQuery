@@ -1,22 +1,22 @@
 {
-  "dependencies": {
-    "mongoose": "^5.9.1"
-  },
-  "name": "rapidquery",
-  "description": "an API protocol with json style to CRUD mongdo database. use only one api url.",
-  "version": "0.1.4",
-  "main": "rapidquery",
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://gitee.com/timetzhang/RapidQuery.git"
-  },
-  "keywords": [
-    "API"
-  ],
-  "author": "tt",
-  "license": "MIT"
+    "dependencies": {
+        "mongoose": "^5.9.1"
+    },
+    "name": "rapidquery",
+    "description": "an API protocol with json style to CRUD mongdo database. use only one api url.",
+    "version": "0.1.6",
+    "main": "rapidquery",
+    "devDependencies": {},
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://gitee.com/timetzhang/RapidQuery.git"
+    },
+    "keywords": [
+        "API"
+    ],
+    "author": "tt",
+    "license": "MIT"
 }

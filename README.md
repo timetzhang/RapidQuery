@@ -98,6 +98,11 @@ app.use(
 app.use("/rapidquery", rapid.middleware.express);
 ```
 
+在Koa2下使用POST
+```key
+app.use(rapid.middleware.koa);
+```
+
 ---
 
 ## 4-Define a Model
