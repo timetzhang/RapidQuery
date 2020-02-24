@@ -72,7 +72,8 @@ cnpm install --save rapidquery
 const RapidQuery = require("rapidquery");
 
 var rapid = new RapidQuery({
-  url: "mongodb://localhost:27017/rapid"
+  host: "mongodb://localhost:27017/rapid",
+  api: "/rapidquery" //可以省略，默认为"/rapidquery"
 });
 ```
 或使用用户名和密码
@@ -101,6 +102,11 @@ app.use("/rapidquery", rapid.middleware.express);
 在Koa2下使用POST
 ```key
 app.use(rapid.middleware.koa);
+```
+
+直接使用
+```key
+rapid.query(ctx.request.body.query)
 ```
 
 ---
