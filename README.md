@@ -188,7 +188,7 @@ var users = rapid.define({
     }
   },
   options: {
-    timestamp: true, //可以不填，默认为true, model会自动添加 meta: {createdAt, updatedAt}
+    timestamp: true, //可以不填，默认为true, model会自动添加 createdAt, updatedAt
     discriminatorKey: "kind"
   }
 });
