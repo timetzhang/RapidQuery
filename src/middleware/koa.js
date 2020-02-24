@@ -7,7 +7,7 @@ module.exports = async(ctx, next) => {
     if (ctx.method === 'POST') {
         try {
             if (ctx.request.body.query) {
-                rapid.query(JSON.parse(ctx.request.body.query)).then(data => {
+                this.query(JSON.parse(ctx.request.body.query)).then(data => {
                     ctx.body = data;
                 })
             }
@@ -15,7 +15,7 @@ module.exports = async(ctx, next) => {
         } catch (err) {
             ctx.status = 400
             ctx.body = `oH-Ho: ${err.message}`
-            console.log('Error handler:', err.message)
+            console.log('RapidQuery Error:', err.message)
         }
     }
 };
