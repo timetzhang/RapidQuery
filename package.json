@@ -4,7 +4,7 @@
     },
     "name": "rapidquery",
     "description": "an API protocol with json style to CRUD mongdo database. use only one api url.",
-    "version": "0.1.9",
+    "version": "0.1.10",
     "main": "rapidquery",
     "devDependencies": {},
     "scripts": {
