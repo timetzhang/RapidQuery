@@ -25,9 +25,13 @@ module.exports = {
 
         //automatically add timestamp to meta.
         if (opt.options.timestamp) {
-
             opt.fields.createdAt = Date;
             opt.fields.updatedAt = Date;
+        }
+
+        //add deletedAt to meta
+        if (opt.options.paranoid) {
+            opt.fields.deletedAt = Date;
         }
 
         var schema = new mongoose.Schema(opt.fields, opt.options);
@@ -52,7 +56,8 @@ module.exports = {
         models.push({
             name: opt.name,
             description: opt.description,
-            model: model
+            model: model,
+            options: opt.options
         });
         console.log(`[RapidQuery]Defined model "${opt.name}"`);
         return model;
