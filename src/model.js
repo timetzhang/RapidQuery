@@ -28,7 +28,6 @@ module.exports = {
 
             opt.fields.createdAt = Date;
             opt.fields.updatedAt = Date;
-            console.log(opt.fields)
         }
 
         var schema = new mongoose.Schema(opt.fields, opt.options);
@@ -48,7 +47,7 @@ module.exports = {
         }
 
         //use mongoose to deine a model.
-        var model = mongoose.model(opt.name, schema);
+        var model = mongoose.model(opt.name, schema, opt.name);
 
         models.push({
             name: opt.name,

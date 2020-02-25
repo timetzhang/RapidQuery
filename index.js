@@ -44,13 +44,16 @@ module.exports = function RapidQuery(options) {
             if (ctx.url === options.api && ctx.method === "POST") {
                 try {
                     if (ctx.request.body.query) {
-                        var data = await this.query(JSON.parse(ctx.request.body.query));
+                        var data = await this.query(ctx.request.body.query);
+                        ctx.type = "application/json"
                         ctx.body = data;
+                    } else {
+                        throw new Error("Query JSON is required.")
                     }
                 } catch (err) {
                     ctx.status = 400;
-                    ctx.body = `oH-Ho: ${err.message}`;
-                    console.log('RapidQuery Error:', err.message);
+                    ctx.body = `${err.name} : ${err.message}`;
+                    console.log(err)
                 }
             }
             await next()
