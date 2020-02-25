@@ -530,6 +530,7 @@ $nin:
 ### 7-1-Update
 
 更新名字为 "tt" 的用户的年龄为 35<br />
+注意：Update至少需要一个条件，否则无法执行
 
 ```keys
 {
@@ -613,6 +614,7 @@ rapid.define({
 ## 删除 Document
 
 删除年龄为35的一个用户. <br />
+注意：Delete至少需要一个条件，否则无法执行
 ```keys
 {
   "delete users": {

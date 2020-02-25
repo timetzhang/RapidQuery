@@ -84,6 +84,14 @@ module.exports = q => {
                     break;
 
                 case "read":
+                    //exclude item which has deletedAt
+                    if (!document.deletedAt) {
+                        document.deletedAt = null;
+                    } else {
+                        document.deletedAt = {
+                            $ne: null
+                        }
+                    }
                     //count
                     if (document.$count) {
                         delete document.$count;
@@ -153,28 +161,36 @@ module.exports = q => {
                     delete document.$update;
 
                     condition = document;
-
-                    collection.updateMany(condition, data, (err, res) => {
-                        if (err) reject(err);
-                        resolve(res);
-                        console.log(`[RapidQuery]Update the collection "${t[1]}" by ${q}, result is ${JSON.stringify(res)}`)
-                    });
+                    //condition cannot be null
+                    if (JSON.stringify(condition) == "{}" || JSON.stringify(condition) == "[]") {
+                        throw new Error("Can not update without any filter");
+                    } else {
+                        collection.updateMany(condition, data, (err, res) => {
+                            if (err) reject(err);
+                            resolve(res);
+                            console.log(`[RapidQuery]Update the collection "${t[1]}" by ${q}, result is ${JSON.stringify(res)}`)
+                        });
+                    }
                     break;
 
                 case "delete":
-
-                    if (options.paranoid) {
-                        collection.updateMany(document, { deletedAt: Date.now() }, (err, res) => {
-                            if (err) reject(err);
-                            resolve(res);
-                            console.log(`[RapidQuery]Logic delete the collection "${t[1]}" by ${q}, result is ${JSON.stringify(res)}`)
-                        });
+                    //condition cannot be null
+                    if (JSON.stringify(document) == "{}" || JSON.stringify(document) == "[]") {
+                        throw new Error("Can not delete without any filter");
                     } else {
-                        collection.deleteMany(document, (err, res) => {
-                            if (err) reject(err);
-                            resolve(res);
-                            console.log(`[RapidQuery]Delete the collection "${t[1]}" by ${q}, result is ${JSON.stringify(res)}`)
-                        });
+                        if (options.paranoid) {
+                            collection.updateMany(document, { deletedAt: Date.now() }, (err, res) => {
+                                if (err) reject(err);
+                                resolve(res);
+                                console.log(`[RapidQuery]Logic delete the collection "${t[1]}" by ${q}, result is ${JSON.stringify(res)}`)
+                            });
+                        } else {
+                            collection.deleteMany(document, (err, res) => {
+                                if (err) reject(err);
+                                resolve(res);
+                                console.log(`[RapidQuery]Delete the collection "${t[1]}" by ${q}, result is ${JSON.stringify(res)}`)
+                            });
+                        }
                     }
                     break;
             }
