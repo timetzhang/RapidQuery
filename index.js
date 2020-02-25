@@ -53,7 +53,7 @@ module.exports = function RapidQuery(options) {
                 } catch (err) {
                     ctx.status = 400;
                     ctx.body = `${err.name} : ${err.message}`;
-                    console.log(err)
+                    console.error(err)
                 }
             }
             await next()

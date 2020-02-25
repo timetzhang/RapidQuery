@@ -75,8 +75,9 @@ module.exports = q => {
             switch (method) {
                 case "create":
                     collection.create(document, (err, res) => {
-                        if (err) reject({ message: err });
+                        if (err) throw err;
                         resolve(res);
+                        console.log(`[RapidQuery]Create collection ${t[1]}`)
                     });
 
                     break;
@@ -91,6 +92,7 @@ module.exports = q => {
                             .exec((err, res) => {
                                 if (err) throw err;
                                 resolve(res);
+                                console.log(`[RapidQuery]Read the count of collection ${t[1]} where ${document}`)
                             });
                         break;
                     }
@@ -98,8 +100,9 @@ module.exports = q => {
                     //group
                     if (document.$aggregate) {
                         collection.aggregate(document.$aggregate).exec((err, res) => {
-                            if (err) reject({ message: err });
+                            if (err) throw err;
                             resolve(res);
+                            console.log(`[RapidQuery]Read the aggregate of collection ${t[1]} where ${document}`)
                         });
                         break;
                     }
@@ -135,8 +138,9 @@ module.exports = q => {
                         .limit(limit)
                         .select(select)
                         .exec((err, res) => {
-                            if (err) reject({ message: err });
+                            if (err) throw err;
                             resolve(res);
+                            console.log(`[RapidQuery]Read the collection ${t[1]} where ${document}`)
                         });
                     break;
 
@@ -150,15 +154,17 @@ module.exports = q => {
                     condition = document;
 
                     collection.updateMany(condition, data, (err, res) => {
-                        if (err) reject({ message: err });
+                        if (err) throw err;
                         resolve(res);
+                        console.log(`[RapidQuery]Update the collection ${t[1]} where ${document}`)
                     });
                     break;
 
                 case "delete":
                     collection.deleteMany(document, (err, res) => {
-                        if (err) reject({ message: err });
+                        if (err) throw err;
                         resolve(res);
+                        console.log(`[RapidQuery]Delete the collection ${t[1]} where ${document}`)
                     });
                     break;
             }

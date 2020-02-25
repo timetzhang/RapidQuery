@@ -13,6 +13,6 @@ module.exports = options => {
     var db = mongoose.connection;
     db.on("error", console.error.bind(console, "connection error:"));
     db.once("open", function() {
-        console.log("connected");
+        console.log(`[RapidQuery]Connected to ${options.host}`);
     });
 };
