@@ -13,7 +13,7 @@ module.exports = q => {
     return new Promise((resolve, reject) => {
         if (q) {
             try {
-                var query = JSON.parse(q);
+                eval(`var query = ${q}`);
                 var heads = Object.keys(query);
             } catch (e) {
                 throw new Error("Query JSON is not correct.")
@@ -77,7 +77,7 @@ module.exports = q => {
                     collection.create(document, (err, res) => {
                         if (err) throw err;
                         resolve(res);
-                        console.log(`[RapidQuery]Create collection ${t[1]}`)
+                        console.log(`[RapidQuery]Create collection "${t[1]}" by ${q}`)
                     });
 
                     break;
@@ -92,7 +92,7 @@ module.exports = q => {
                             .exec((err, res) => {
                                 if (err) throw err;
                                 resolve(res);
-                                console.log(`[RapidQuery]Read the count of collection ${t[1]} where ${document}`)
+                                console.log(`[RapidQuery]Read the count of collection "${t[1]}" by ${q}`)
                             });
                         break;
                     }
@@ -102,7 +102,7 @@ module.exports = q => {
                         collection.aggregate(document.$aggregate).exec((err, res) => {
                             if (err) throw err;
                             resolve(res);
-                            console.log(`[RapidQuery]Read the aggregate of collection ${t[1]} where ${document}`)
+                            console.log(`[RapidQuery]Read the aggregate of collection "${t[1]}" by ${q}`)
                         });
                         break;
                     }
@@ -140,7 +140,7 @@ module.exports = q => {
                         .exec((err, res) => {
                             if (err) throw err;
                             resolve(res);
-                            console.log(`[RapidQuery]Read the collection ${t[1]} where ${document}`)
+                            console.log(`[RapidQuery]Read the collection "${t[1]}" by ${q}`)
                         });
                     break;
 
@@ -156,7 +156,7 @@ module.exports = q => {
                     collection.updateMany(condition, data, (err, res) => {
                         if (err) throw err;
                         resolve(res);
-                        console.log(`[RapidQuery]Update the collection ${t[1]} where ${document}`)
+                        console.log(`[RapidQuery]Update the collection "${t[1]}" by ${q}`)
                     });
                     break;
 
@@ -164,7 +164,7 @@ module.exports = q => {
                     collection.deleteMany(document, (err, res) => {
                         if (err) throw err;
                         resolve(res);
-                        console.log(`[RapidQuery]Delete the collection ${t[1]} where ${document}`)
+                        console.log(`[RapidQuery]Delete the collection "${t[1]}" by ${q}`)
                     });
                     break;
             }
