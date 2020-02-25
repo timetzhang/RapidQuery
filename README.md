@@ -9,6 +9,7 @@
 ### [定义Model](#4-define-a-model)
 * #### [数据类型](#4-1-date-types)
 * #### [数据验证](#4-2-validation)
+* #### [选项](#4-3-model-options)
 ### [创建Document](#5-create-a-document)
 ### [查询Document](#6-query-documents)
 * #### [查询](#6-1-read)
@@ -189,6 +190,7 @@ var users = rapid.define({
   },
   options: {
     timestamp: true, //可以不填，默认为true, model会自动添加 meta: {createdAt, updatedAt}
+    paranoid: true, //可以不填，默认为true, 当使用delete时, 使用逻辑删除（并不真正删除）
     discriminatorKey: "kind"
   }
 });
@@ -268,6 +270,13 @@ validate: (v) => {
 
 因 ORM 部分采用的是 Mongoose 的代码，关于验证的详细说明, 请访问: http://www.mongoosejs.net/docs/validation.html
 
+### 4-3-Model Options
+### 选项
+
+```key
+timestamp: true   // 默认为true, model会自动添加 meta: {createdAt, updatedAt}
+paranoid: true    // 默认为true, 当使用delete时, 使用逻辑删除（并不真正删除）,删除时添加deletedAt
+```
 ---
 
 <br />
