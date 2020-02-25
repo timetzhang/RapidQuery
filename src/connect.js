@@ -15,4 +15,7 @@ module.exports = options => {
     db.once("open", function() {
         console.log(`[RapidQuery]Connected to ${options.host}`);
     });
+    db.once("close", function() {
+        console.log(`[RapidQuery]Close connection to ${options.host}`);
+    });
 };

@@ -79,7 +79,7 @@ var rapid = new RapidQuery({
 或使用用户名和密码
 ```key
 var rapid = new RapidQuery({
-  url: "mongodb://username:password@localhost:27017/databasename"
+    host: "mongodb://admin:12345678@localhost:27017/rapid?authSource=admin"
 });
 ```
 
