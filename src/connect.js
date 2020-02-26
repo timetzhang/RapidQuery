@@ -4,18 +4,17 @@
  */
 var mongoose = require("mongoose");
 
-module.exports = options => {
+module.exports = async options => {
     //Connect to the database
-    mongoose.connect(options.host, {
+    var db = await mongoose.connect(options.host, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     });
-    var db = mongoose.connection;
-    db.on("error", console.error.bind(console, "connection error:"));
-    db.once("open", function() {
+    db.connection.on("error", console.error.bind(console, "connection error:"));
+    db.connection.once("open", function() {
         console.log(`[RapidQuery]Connected to ${options.host}`);
     });
-    db.once("close", function() {
+    db.connection.once("close", function() {
         console.log(`[RapidQuery]Close connection to ${options.host}`);
     });
 };

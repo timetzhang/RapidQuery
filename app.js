@@ -1,47 +1,66 @@
-const RapidQuery = require("./rapidquery");
+const RapidQuery = require("./index");
 var rapid = new RapidQuery({
-    url: "mongodb://localhost:27017/rapid"
+    host: "mongodb://admin:cl3bkm4fuc@localhost:27017/rapid?authSource=admin"
 });
 
-var users = rapid.define({
-    name: "users",
-    description: "用户数据",
-    fields: {
-        id: {
-            type: rapid.ObjectId,
-            default: rapid.ObjectId()
-        },
-        firstname: String,
-        lastname: String,
-        email: {
-            type: String,
-            unique: true,
-            required: [true, "Email为必填项"],
-            validate: {
-                validator: value => {
-                    return /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(
-                        value
-                    );
-                },
-                message: "{VALUE} 不是一个有效的Email地址!"
+async function run() {
+    var users = rapid.define({
+        name: "users",
+        description: "用户数据",
+        fields: {
+            id: {
+                type: rapid.ObjectId,
+                default: rapid.ObjectId()
+            },
+            firstname: String,
+            lastname: String,
+            age: {
+                type: Number,
+                //数值验证, 最小值为15, 最大值为30
+                min: 6,
+                max: 12
+            },
+            alias: Array,
+            school: {
+                name: String
             }
         },
-        age: {
-            type: Number,
-            //数值验证, 最小值为15, 最大值为30
-            min: 6,
-            max: 12
-        },
-        alias: Array,
-        school: {
-            name: String
+        options: {
+            timestamp: true, //可以不填，默认为true, model会自动添加 meta: {createdAt, updatedAt}
+            discriminatorKey: "kind"
         }
-    },
-    options: {
-        timestamp: true, //可以不填，默认为true, model会自动添加 meta: {createdAt, updatedAt}
-        discriminatorKey: "kind"
-    }
-});
+    });
+    var users = rapid.define({
+        name: "students",
+        description: "用户数据",
+        fields: {
+            id: {
+                type: rapid.ObjectId,
+                default: rapid.ObjectId()
+            },
+            firstname: String,
+        },
+        options: {
+            timestamp: true, //可以不填，默认为true, model会自动添加 meta: {createdAt, updatedAt}
+            discriminatorKey: "kind"
+        }
+    });
+
+    rapid
+        .query(`{
+        "read students":{
+            firstname: "tt4",
+        },
+        "read users":{
+            firstname: "qq"
+        },
+    }`)
+        .then(res => {
+            console.log(res)
+        });
+}
+
+run()
 
 // rapid
 //   .query({
@@ -64,16 +83,7 @@ var users = rapid.define({
 //     console.log(err);
 //   });
 
-rapid
-    .query({
-        "read users": {
-            firstname: "tt"
-        }
-    })
-    .then(res => {
-        console.log(res);
-        console.log(rapid.middleware.express);
-    });
+
 
 // rapid
 //   .query({

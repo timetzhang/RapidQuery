@@ -1,6 +1,6 @@
 # RapidQuery
 
-#### Ver 0.2.1
+#### Ver 0.1a
 
 ## Content
 ### [Intro](#1-intro)
@@ -35,7 +35,7 @@
 比如Post/Get 下面这个JSON, 参数名为 "query"  ：
 ```key
 {
-  "read user":{
+  "read users":{
     id: 1
   }
 }
@@ -46,12 +46,14 @@ http://localhost:8080/rapidql
 ```
 就可以查询到数据
 ```key
-[{
-  id: 1,
-  name: "tt",
-  age : 29,
-  gender: "male"
-}]
+{
+  users: [{
+    id: 1,
+    name: "tt",
+    age : 29,
+    gender: "male"
+  }]
+}
 ```
 ---
 
@@ -345,16 +347,18 @@ http://localhost:8080/rapidquery?query={"create user":{"firstname":"tt"}}
 
 结果:
 ```keys
-[
-  {
-    _id: 5e4b97490cc84609513cf8fa,
-    firstname: 'tt',
-    lastname: 'zhang',
-    age: 29,
-    school: { name: 'UCLA' },
-    __v: 0
-  }
-]
+{
+  users:[
+    {
+      _id: 5e4b97490cc84609513cf8fa,
+      firstname: 'tt',
+      lastname: 'zhang',
+      age: 29,
+      school: { name: 'UCLA' },
+      __v: 0
+    }
+  ]
+}
 ```
 
 查询所有Users
@@ -365,6 +369,32 @@ http://localhost:8080/rapidquery?query={"create user":{"firstname":"tt"}}
 }
 ```
 
+### 并行查询
+
+查询名为"tt"的user和"alice"的student<br />
+注意：查询为并行，所以不能有先后顺序。
+
+```keys
+{
+  "read users": {
+    firstname: "tt"
+  },
+  "read students": {
+    name: "alice"
+  }
+}
+```
+
+结果:
+```keys
+{
+  users:[
+    {...}
+  ],
+  students:[
+    {...}
+  ]
+}
 <br />
 
 ### 6-2-Comparison Operatiors 
@@ -379,19 +409,6 @@ http://localhost:8080/rapidquery?query={"create user":{"firstname":"tt"}}
   }
 }
 ```
-
-结果:
-```keys
-[
-  {
-    school: { name: 'MIT' },
-    _id: 5e4b9a5e2b6efc110df51fe2,
-    firstname: 'jinchuang',
-    lastname: 'huang',
-    age: 21,
-    __v: 0
-  }
-]
 
 ```
 还有其他比较运算符可以使用.
@@ -541,7 +558,6 @@ $nin:
 ### 7-1-Update
 
 更新名字为 "tt" 的用户的年龄为 35<br />
-注意：Update至少需要一个条件，否则无法执行
 
 ```keys
 {
@@ -556,7 +572,9 @@ $nin:
 
 结果:
 ```keys
-{ n: 1, nModified: 1, ok: 1 }
+{
+  update_users: { n: 1, nModified: 1, ok: 1 }
+}
 ```
 <br />
 
@@ -625,11 +643,26 @@ rapid.define({
 ## 删除 Document
 
 删除年龄为35的一个用户. <br />
-注意：Delete至少需要一个条件，否则无法执行
 ```keys
 {
   "delete users": {
     age: 35
   }
+}
+```
+
+## 9-Notes
+## 说明
+
+### 9-1-Returns
+### 返回结果
+
+***为Collection名
+```keys
+{
+  create_***:{},
+  ***:[],
+  update_***:{},
+  delete_***:{},
 }
 ```

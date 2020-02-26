@@ -59,6 +59,7 @@ module.exports = {
             model: model,
             options: opt.options
         });
+
         console.log(`[RapidQuery]Defined model "${opt.name}"`);
         return model;
     }

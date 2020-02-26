@@ -10,7 +10,7 @@ var model = require("./model");
  * @returns {JSON}
  */
 module.exports = q => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async(resolve, reject) => {
         if (q) {
             try {
                 eval(`var query = ${q}`);
@@ -34,6 +34,8 @@ module.exports = q => {
          *    }
          * }
          */
+        var finalData = {};
+
         heads.forEach(item => {
             var t = item.split(" "); // ["create", "user"]
 
@@ -45,15 +47,16 @@ module.exports = q => {
             }
 
             //validate collection name
+            var collectionName = t[1];
             var m = model.getModels().filter(value => {
-                return value.name === t[1];
+                return value.name === collectionName;
             });
             if (m.length <= 0) {
-                let message = `Model "${t[1]}" is not exist`;
+                let message = `Model "${collectionName}" is not exist`;
 
                 //find a collection could be
                 let c = model.getModels().filter(value => {
-                    return value.name.includes(t[1]);
+                    return value.name.includes(collectionName);
                 });
                 if (c) {
                     message += `, do you mean "${c[0].name}"`
@@ -72,15 +75,24 @@ module.exports = q => {
             if (typeof document !== "object") {
                 throw new Error("Query JSON is not correct.")
             }
+
+            /**
+             * Query Main
+             */
             switch (method) {
                 case "create":
-
                     collection.create(document, (err, res) => {
-                        if (err) reject(err);
-                        resolve(res);
-                        console.log(`[RapidQuery]Create collection "${t[1]}" by ${q}`)
-                    });
+                        if (err) reject(err)
+                        console.log(`[RapidQuery]Create collection "${collectionName}"`)
+                        finalData = {
+                            ...finalData,
+                            [`create_${collectionName}`]: res
+                        };
 
+                        if (Object.keys(finalData).length == heads.length) {
+                            resolve(finalData)
+                        }
+                    });
                     break;
 
                 case "read":
@@ -100,8 +112,16 @@ module.exports = q => {
                             .countDocuments()
                             .exec((err, res) => {
                                 if (err) reject(err);
-                                resolve(res);
-                                console.log(`[RapidQuery]Read the count of collection "${t[1]}" by ${q}`)
+                                console.log(`[RapidQuery]Read the count of collection "${collectionName}" by ${q}`)
+                                finalData = {
+                                    ...finalData,
+                                    [`count_${collectionName}`]: res
+                                };
+
+                                if (Object.keys(finalData).length == heads.length) {
+                                    resolve(finalData)
+                                }
+
                             });
                         break;
                     }
@@ -110,8 +130,15 @@ module.exports = q => {
                     if (document.$aggregate) {
                         collection.aggregate(document.$aggregate).exec((err, res) => {
                             if (err) reject(err);
-                            resolve(res);
-                            console.log(`[RapidQuery]Read the aggregate of collection "${t[1]}" by ${q}`)
+                            console.log(`[RapidQuery]Read the aggregate of collection "${collectionName}" by ${q}`)
+                            finalData = {
+                                ...finalData,
+                                [`aggregate_${collectionName}`]: res
+                            };
+
+                            if (Object.keys(finalData).length == heads.length) {
+                                resolve(finalData)
+                            }
                         });
                         break;
                     }
@@ -148,8 +175,16 @@ module.exports = q => {
                         .select(select)
                         .exec((err, res) => {
                             if (err) reject(err);
-                            resolve(res);
-                            console.log(`[RapidQuery]Read the collection "${t[1]}" by ${q}`)
+                            console.log(`[RapidQuery]Read the collection "${collectionName}" by ${q}`)
+
+                            finalData = {
+                                ...finalData,
+                                [collectionName]: res
+                            };
+
+                            if (Object.keys(finalData).length == heads.length) {
+                                resolve(finalData)
+                            }
                         });
                     break;
 
@@ -167,8 +202,17 @@ module.exports = q => {
                     } else {
                         collection.updateMany(condition, data, (err, res) => {
                             if (err) reject(err);
-                            resolve(res);
-                            console.log(`[RapidQuery]Update the collection "${t[1]}" by ${q}, result is ${JSON.stringify(res)}`)
+
+                            console.log(`[RapidQuery]Update the collection "${collectionName}" by ${q}, result is ${JSON.stringify(res)}`)
+                            finalData = {
+                                ...finalData,
+                                [`update_${collectionName}`]: res
+                            };
+
+                            if (Object.keys(finalData).length == heads.length) {
+                                resolve(finalData)
+                            }
+
                         });
                     }
                     break;
@@ -181,19 +225,33 @@ module.exports = q => {
                         if (options.paranoid) {
                             collection.updateMany(document, { deletedAt: Date.now() }, (err, res) => {
                                 if (err) reject(err);
-                                resolve(res);
-                                console.log(`[RapidQuery]Logic delete the collection "${t[1]}" by ${q}, result is ${JSON.stringify(res)}`)
+                                console.log(`[RapidQuery]Logic delete the collection "${collectionName}" by ${q}, result is ${JSON.stringify(res)}`)
+                                finalData = {
+                                    ...finalData,
+                                    [`delete_${collectionName}`]: res
+                                };
+
+                                if (Object.keys(finalData).length == heads.length) {
+                                    resolve(finalData)
+                                }
                             });
                         } else {
                             collection.deleteMany(document, (err, res) => {
                                 if (err) reject(err);
-                                resolve(res);
-                                console.log(`[RapidQuery]Delete the collection "${t[1]}" by ${q}, result is ${JSON.stringify(res)}`)
+                                console.log(`[RapidQuery]Delete the collection "${collectionName}" by ${q}, result is ${JSON.stringify(res)}`)
+                                finalData = {
+                                    ...finalData,
+                                    [`delete_${collectionName}`]: res
+                                };
+
+                                if (Object.keys(finalData).length == heads.length) {
+                                    resolve(finalData)
+                                }
                             });
                         }
                     }
                     break;
             }
-        });
+        })
     });
 };
