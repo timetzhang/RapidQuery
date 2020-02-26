@@ -477,6 +477,17 @@ $select可以选择只要查询的字段
   }
 }
 ```
+
+或者使用 "-" 排除字段
+```key
+{
+  "read users": {
+    $select:"-firstname -age"
+  }
+}
+```
+
+
 <br />
 
 ### 6-8-In or NotIn
