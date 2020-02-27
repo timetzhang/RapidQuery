@@ -1,8 +1,9 @@
 /**
- * RapidQuery Main
+ * RapidQuery Query Main
  * by Timet Zhang
+ * Last Updated at 20200227
  */
-var model = require("./model");
+var rapidModels = require("./model");
 
 /**
  * Query
@@ -13,8 +14,18 @@ module.exports = q => {
     return new Promise(async(resolve, reject) => {
         if (q) {
             try {
+                // 将通过POST或GET传进来的字符串 q 进行eval object转换
+                // 为什么要通过 eval 而不是 JSON.parse 
+                // 是因为需要解析 1. 正则表达式 2. 字段名可省略" "
                 eval(`var query = ${q}`);
+
+                // heads 保存了几个主字段名，比如 "create user", "update user"
+                // 如有多个主字段名，则通过 map forEach 进行同步执行
                 var heads = Object.keys(query);
+
+                if (heads.length <= 0) {
+                    throw new Error("Query JSON is Required.")
+                }
             } catch (e) {
                 throw new Error("Query JSON is not correct.")
             }
@@ -22,41 +33,38 @@ module.exports = q => {
             throw new Error("Query JSON is Required.")
         }
 
-        if (heads.length <= 0) {
-            throw new Error("Query JSON is Required.")
-        }
-
-        /**
-         * eg.
-         * {
-         *    "create user": {
-         *        name: "tt"
-         *    }
-         * }
-         */
+        // 所有查询执行完以后，将数据保存在 finalData
         var finalData = {};
 
         heads.forEach(item => {
-            var t = item.split(" "); // ["create", "user"]
+            let head = item.split(" "); // ["create", "user"]
 
-            //validate method
-            if (!t.includes("create") && !t.includes("read") && !t.includes("update") && !t.includes("delete")) {
-                throw new Error("Query JSON should start with 'create' 'read' 'update' or 'delete'.");
+            // Validate method
+            // method 为 create, read, update 或 delete, count, group
+            // 确认 head 包含了这些
+            if (!head.includes("create") &&
+                !head.includes("read") &&
+                !head.includes("update") &&
+                !head.includes("delete") &&
+                !head.includes("count") &&
+                !head.includes("aggregate")) {
+                throw new Error("Query JSON should start with 'create', 'read', 'update', 'delete' or 'count', 'aggregate'.");
             } else {
-                var method = t[0];
+                var method = head[0];
             }
 
-            //validate collection name
-            var collectionName = t[1];
-            var m = model.getModels().filter(value => {
-                return value.name === collectionName;
+            // Validate model name
+            var modelName = head[1];
+            // 通过名称找到对应的 Model
+            var m = rapidModels.getModels().filter(value => {
+                return value.name === modelName;
             });
             if (m.length <= 0) {
-                let message = `Model "${collectionName}" is not exist`;
+                let message = `Model "${modelName}" is not exist`;
 
-                //find a collection could be
+                //找到有可能的Model name
                 let c = model.getModels().filter(value => {
-                    return value.name.includes(collectionName);
+                    return value.name.includes(modelName);
                 });
                 if (c) {
                     message += `, do you mean "${c[0].name}"`
@@ -65,12 +73,12 @@ module.exports = q => {
                 throw new Error(message);
 
             } else {
-                var collection = m[0].model;
+                var model = m[0].model;
                 var options = m[0].options;
             }
 
-            // validate query document
-            // is the document a json object
+            // Validate query document
+            // 验证 document 是否为 object
             var document = query[item]; // {name: "tt"}
             if (typeof document !== "object") {
                 throw new Error("Query JSON is not correct.")
@@ -81,12 +89,12 @@ module.exports = q => {
              */
             switch (method) {
                 case "create":
-                    collection.create(document, (err, res) => {
+                    model.create(document, (err, res) => {
                         if (err) reject(err)
-                        console.log(`[RapidQuery]Create collection "${collectionName}"`)
+                        console.log(`[RapidQuery]Create collection "${modelName}"`)
                         finalData = {
                             ...finalData,
-                            [`create_${collectionName}`]: res
+                            [`create_${modelName}`]: res
                         };
 
                         if (Object.keys(finalData).length == heads.length) {
@@ -96,51 +104,16 @@ module.exports = q => {
                     break;
 
                 case "read":
-                    //exclude item which has deletedAt
+                    // Exclude item which has deletedAt
                     if (!document.deletedAt) {
                         document.deletedAt = null;
-                    } else {
+                    }
+                    // 如果document中包含 deletedAt: true
+                    // 则是进行查询已经逻辑删除的数据
+                    else {
                         document.deletedAt = {
                             $ne: null
                         }
-                    }
-                    //count
-                    if (document.$count) {
-                        delete document.$count;
-                        collection
-                            .find(document)
-                            .countDocuments()
-                            .exec((err, res) => {
-                                if (err) reject(err);
-                                console.log(`[RapidQuery]Read the count of collection "${collectionName}" by ${q}`)
-                                finalData = {
-                                    ...finalData,
-                                    [`count_${collectionName}`]: res
-                                };
-
-                                if (Object.keys(finalData).length == heads.length) {
-                                    resolve(finalData)
-                                }
-
-                            });
-                        break;
-                    }
-
-                    //group
-                    if (document.$aggregate) {
-                        collection.aggregate(document.$aggregate).exec((err, res) => {
-                            if (err) reject(err);
-                            console.log(`[RapidQuery]Read the aggregate of collection "${collectionName}" by ${q}`)
-                            finalData = {
-                                ...finalData,
-                                [`aggregate_${collectionName}`]: res
-                            };
-
-                            if (Object.keys(finalData).length == heads.length) {
-                                resolve(finalData)
-                            }
-                        });
-                        break;
                     }
 
                     //order
@@ -167,7 +140,7 @@ module.exports = q => {
                         delete document.$select;
                     }
 
-                    collection
+                    model
                         .find(document)
                         .sort(order)
                         .skip(skip)
@@ -175,17 +148,51 @@ module.exports = q => {
                         .select(select)
                         .exec((err, res) => {
                             if (err) reject(err);
-                            console.log(`[RapidQuery]Read the collection "${collectionName}" by ${q}`)
+                            console.log(`[RapidQuery]Read the collection "${modelName}" by ${q}`)
 
                             finalData = {
                                 ...finalData,
-                                [collectionName]: res
+                                [modelName]: res
                             };
 
                             if (Object.keys(finalData).length == heads.length) {
                                 resolve(finalData)
                             }
                         });
+                    break;
+
+                case "count":
+                    model
+                        .find(document)
+                        .countDocuments()
+                        .exec((err, res) => {
+                            if (err) reject(err);
+                            console.log(`[RapidQuery]Read the count of collection "${modelName}" by ${q}`)
+                            finalData = {
+                                ...finalData,
+                                [`count_${modelName}`]: res
+                            };
+
+                            if (Object.keys(finalData).length == heads.length) {
+                                resolve(finalData)
+                            }
+
+                        });
+                    break;
+
+                case "aggregate":
+                    model.aggregate(document).exec((err, res) => {
+                        if (err) reject(err);
+                        console.log(`[RapidQuery]Read the aggregate of collection "${modelName}" by ${q}`)
+                        finalData = {
+                            ...finalData,
+                            [`aggregate_${modelName}`]: res
+                        };
+
+                        if (Object.keys(finalData).length == heads.length) {
+                            resolve(finalData)
+                        }
+                    });
                     break;
 
                 case "update":
@@ -200,13 +207,13 @@ module.exports = q => {
                     if (JSON.stringify(condition) == "{}" || JSON.stringify(condition) == "[]") {
                         throw new Error("Can not update without any filter");
                     } else {
-                        collection.updateMany(condition, data, (err, res) => {
+                        model.updateMany(condition, data, (err, res) => {
                             if (err) reject(err);
 
-                            console.log(`[RapidQuery]Update the collection "${collectionName}" by ${q}, result is ${JSON.stringify(res)}`)
+                            console.log(`[RapidQuery]Update the collection "${modelName}" by ${q}, result is ${JSON.stringify(res)}`)
                             finalData = {
                                 ...finalData,
-                                [`update_${collectionName}`]: res
+                                [`update_${modelName}`]: res
                             };
 
                             if (Object.keys(finalData).length == heads.length) {
@@ -223,12 +230,12 @@ module.exports = q => {
                         throw new Error("Can not delete without any filter");
                     } else {
                         if (options.paranoid) {
-                            collection.updateMany(document, { deletedAt: Date.now() }, (err, res) => {
+                            model.updateMany(document, { deletedAt: Date.now() }, (err, res) => {
                                 if (err) reject(err);
-                                console.log(`[RapidQuery]Logic delete the collection "${collectionName}" by ${q}, result is ${JSON.stringify(res)}`)
+                                console.log(`[RapidQuery]Logic delete the collection "${modelName}" by ${q}, result is ${JSON.stringify(res)}`)
                                 finalData = {
                                     ...finalData,
-                                    [`delete_${collectionName}`]: res
+                                    [`delete_${modelName}`]: res
                                 };
 
                                 if (Object.keys(finalData).length == heads.length) {
@@ -236,12 +243,12 @@ module.exports = q => {
                                 }
                             });
                         } else {
-                            collection.deleteMany(document, (err, res) => {
+                            model.deleteMany(document, (err, res) => {
                                 if (err) reject(err);
-                                console.log(`[RapidQuery]Delete the collection "${collectionName}" by ${q}, result is ${JSON.stringify(res)}`)
+                                console.log(`[RapidQuery]Delete the collection "${modelName}" by ${q}, result is ${JSON.stringify(res)}`)
                                 finalData = {
                                     ...finalData,
-                                    [`delete_${collectionName}`]: res
+                                    [`delete_${modelName}`]: res
                                 };
 
                                 if (Object.keys(finalData).length == heads.length) {

@@ -1,9 +1,12 @@
 const RapidQuery = require("./index");
-var rapid = new RapidQuery({
-    host: "mongodb://admin:cl3bkm4fuc@localhost:27017/rapid?authSource=admin"
-});
+
 
 async function run() {
+
+    var rapid = new RapidQuery({
+        host: "mongodb://admin:cl3bkm4fuc@localhost:27017/rapid?authSource=admin"
+    });
+
     var users = rapid.define({
         name: "users",
         description: "用户数据",
@@ -46,18 +49,19 @@ async function run() {
         }
     });
 
-    rapid
+    var data = await rapid
         .query(`{
-        "read students":{
-            firstname: "tt4",
-        },
-        "read users":{
-            firstname: "qq"
-        },
-    }`)
-        .then(res => {
-            console.log(res)
-        });
+            "aggregate users":[
+                {$match: { firstname: /t/}},
+                {$group : {_id : "$firstname", num_tutorial : {$max : "$createdAt"}}}
+            ],
+        }`)
+
+    console.log(data)
+
+
+
+
 }
 
 run()

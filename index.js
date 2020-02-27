@@ -7,9 +7,10 @@ var connect = require("./src/connect");
 var model = require("./src/model");
 var query = require("./src/query");
 
+
 module.exports = function RapidQuery(options) {
     //constructor
-    connect(options);
+    this.db = connect(options);
 
     //type defines
     this.ObjectId = mongoose.Types.ObjectId;

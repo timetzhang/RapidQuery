@@ -11,6 +11,8 @@
 * #### [数据验证](#4-2-validation)
 * #### [选项](#4-3-model-options)
 ### [创建Document](#5-create-a-document)
+* #### [创建](#5-1-create)
+* #### [创建多个](#5-2-create-multi)
 ### [查询Document](#6-query-documents)
 * #### [查询](#6-1-read)
 * #### [使用 比较运算符](#6-2-comparison-operatiors)
@@ -21,10 +23,14 @@
 * #### [过滤查询字段](#6-7-select)
 * #### [In和NotIn](#6-8-in-or-notin)
 * #### [计数](#6-9-count)
+* #### [同时查询多个Collections](#6-10-multi-query)
 ### [更改Document](#7-update-document)
 * #### [更改](#7-1-update)
 * #### [将数值添加到数组](#7-2-push)
 ### [删除Document](#8-delete-document)
+### [说明](#notes)
+* #### [返回值](#returns)
+* #### [Mongoose DB原型](#mongoose-db)
 
 ----
 
@@ -107,9 +113,9 @@ app.use("/rapidquery", rapid.middleware.express);
 app.use(rapid.middleware.koa);
 ```
 
-直接使用
+或者可以直接使用
 ```key
-rapid.query(ctx.request.body.query)
+var data = await rapid.query(ctx.request.body.query)
 ```
 
 ---
@@ -279,6 +285,7 @@ validate: (v) => {
 timestamp: true   // 默认为true, model会自动添加 meta: {createdAt, updatedAt}
 paranoid: true    // 默认为true, 当使用delete时, 使用逻辑删除（并不真正删除）,删除时添加deletedAt
 ```
+
 ---
 
 <br />
@@ -286,13 +293,15 @@ paranoid: true    // 默认为true, 当使用delete时, 使用逻辑删除（并
 ## 5-Create a document
 ## 创建 Document
 
+### 5-1-Create
+### 创建
+
 使用GET方法:
 ```key
 http://localhost:8080/rapidquery?query={"create user":{"firstname":"tt"}}
 ```
 
-使用POST方法（参数为query）
-
+推荐使用POST方法（参数为query）
 ```key
 {
   "create users": {
@@ -305,7 +314,10 @@ http://localhost:8080/rapidquery?query={"create user":{"firstname":"tt"}}
   }
 }
 ```
+
+### 5-2-Create Multi
 ### 创建多个documents
+
 ```key
 {
   "create users": [
@@ -369,32 +381,6 @@ http://localhost:8080/rapidquery?query={"create user":{"firstname":"tt"}}
 }
 ```
 
-### 并行查询
-
-查询名为"tt"的user和"alice"的student<br />
-注意：查询为并行，所以不能有先后顺序。
-
-```keys
-{
-  "read users": {
-    firstname: "tt"
-  },
-  "read students": {
-    name: "alice"
-  }
-}
-```
-
-结果:
-```keys
-{
-  users:[
-    {...}
-  ],
-  students:[
-    {...}
-  ]
-}
 <br />
 
 ### 6-2-Comparison Operatiors 
@@ -504,7 +490,6 @@ $select可以选择只要查询的字段
 }
 ```
 
-
 <br />
 
 ### 6-8-In or NotIn
@@ -540,16 +525,52 @@ $nin:
 使用 $count 计算学校名为MIT用户数量
 ```keys
 {
-  "read users": {
+  "count users": {
     "school.name": {
       $in: ["MIT"]
-    },
-    $count: 1
+    }
   }
 }
 ```
 
+结果:
+```keys
+{
+  count_users: 1
+}
+```
+
+### 6-10-Multi Query
+### 并行查询多个Collections
+
+查询名为"tt"的user和"alice"的student<br />
+注意：查询为并行，所以不能有先后顺序。
+
+```keys
+{
+  "read users": {
+    firstname: "tt"
+  },
+  "read students": {
+    name: "alice"
+  }
+}
+```
+
+结果:
+```keys
+{
+  users:[
+    {...}
+  ],
+  students:[
+    {...}
+  ]
+}
+```
+
 ---
+
 <br />
 
 ## 7-Update Document
@@ -582,27 +603,6 @@ $nin:
 ### 将数值添加到数组
 
 更改名字为 "tt" 的用户<br />
-
-首先，将Users表添加一个新的数组字段Cars
-```key
-rapid.define({
-  model: "users",
-  description: "This is an user collection",
-  schema: {
-    firstname: String,
-    lastname: String,
-    age: Number,
-    cars: Array,
-    cellphone:{
-      type: String,
-      unique: true
-    }
-    school: {
-      name: String
-    }
-  }
-});
-```
 
 ```key
 {
@@ -651,10 +651,13 @@ rapid.define({
 }
 ```
 
-## 9-Notes
+<br />
+
+## Notes
 ## 说明
 
-### 9-1-Returns
+
+### Returns
 ### 返回结果
 
 ***为Collection名
@@ -664,5 +667,16 @@ rapid.define({
   ***:[],
   update_***:{},
   delete_***:{},
+  count_***:{},
+  aggregate_***:{},
 }
+```
+<br />
+
+### Mongoose DB
+### 获取Mongoose的db原型
+
+db中包含了所有定义的Models, Schemas, Connections等，如果需要进行扩展开发，可以使用rapid.db来获取。只能通过异步来获取。
+```key
+var db = await rapid.db
 ```
