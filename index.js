@@ -14,6 +14,8 @@ module.exports = function RapidQuery(options) {
 
     //type defines
     this.ObjectId = mongoose.Types.ObjectId;
+    this.Mixed = mongoose.Types.Mixed;
+    this.Decimal128 = mongoose.Types.Decimal128;
 
     //model define
     this.define = model.define;

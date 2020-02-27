@@ -1,6 +1,6 @@
 # RapidQuery
 
-#### Ver 0.2.3a
+#### Ver 0.2.4a
 
 ## Content
 ### [Intro](#1-intro)
@@ -214,10 +214,11 @@ Number
 Date
 Buffer
 Boolean
-Mixed      // 一个啥都可以放的 SchemaType ， 虽然便利，但也会让数据难以维护。
-ObjectId   // 要指定类型为 ObjectId，在声明中使用 rapid.ObjectId。
 Array
-Decimal128
+
+Mixed      // 一个啥都可以放的 SchemaType, 虽然便利，但也会让数据难以维护。在声明中使用 rapid.Mixed
+ObjectId   // 要指定类型为 ObjectId，在声明中使用 rapid.ObjectId
+Decimal128 // 在声明中使用 rapid.Decimal128
 ```
 
 所有可用的选项
