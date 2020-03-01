@@ -1,6 +1,6 @@
 # RapidQuery
 
-#### Ver 0.2.4a
+#### Ver 0.2.5a
 
 ## Content
 ### [Intro](#1-intro)
