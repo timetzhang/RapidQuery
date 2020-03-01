@@ -80,42 +80,41 @@ cnpm install --save rapidquery
 ```key
 const RapidQuery = require("rapidquery");
 
-var rapid = new RapidQuery({
-  host: "mongodb://localhost:27017/rapid",
-  api: "/rapidquery" //可以省略，默认为"/rapidquery"
+RapidQuery.connect({
+  host: "mongodb://localhost:27017/rapid"
 });
 ```
 或使用用户名和密码
 ```key
-var rapid = new RapidQuery({
+RapidQuery.connect({
     host: "mongodb://admin:12345678@localhost:27017/rapid?authSource=admin"
 });
 ```
 
-在Express下使用GET
+在Express或Koa下使用
 ```key
-app.use("/rapidquery", rapid.middleware.express);
-```
 
-在Express下使用POST
-```key
-app.use(
-  bodyParser.urlencoded({
-    limit: "50mb",
-    extended: true
-  })
-);
-app.use("/rapidquery", rapid.middleware.express);
-```
+router.post('/rapidquery', async function(ctx, next) {
+  try {
+      if (ctx.request.body.query) {
+          var data = await RapidQuery.query(ctx.request.body.query);
+          ctx.type = "application/json"
+          ctx.body = data;
+      } else {
+          throw new Error("Query JSON is required.")
+      }
+  } catch (err) {
+      ctx.status = 400;
+      ctx.body = `${err.name} : ${err.message}`;
+      console.error(err)
+  }
+})
 
-在Koa2下使用POST
-```key
-app.use(rapid.middleware.koa);
 ```
 
 或者可以直接使用
 ```key
-var data = await rapid.query(ctx.request.body.query)
+var data = await RapidQuery.query(ctx.request.body.query)
 ```
 
 ---
@@ -125,7 +124,7 @@ var data = await rapid.query(ctx.request.body.query)
 
 定义一个超简单的 Model
 ```key
-var users = rapid.define({
+var users = RapidQuery.define({
   name: "users",
   description: "用户数据",
   fields: {
@@ -148,13 +147,13 @@ meta:{
 
 来定义一个较完整功能的
 ```key
-var users = rapid.define({
+var users = RapidQuery.define({
   name: "users",
   description: "用户数据",
   fields: {
     id: {
-      type: rapid.ObjectId,
-      default: rapid.newObjectId() //rapid.newObjectId()可以生成一段新的id
+      type: RapidQuery.ObjectId,
+      default: RapidQuery.NewObjectId //RapidQuery.NewObjectId可以生成一段新的id
     },
     firstname: String,
     lastname: String,
@@ -216,9 +215,9 @@ Buffer
 Boolean
 Array
 
-Mixed      // 一个啥都可以放的 SchemaType, 虽然便利，但也会让数据难以维护。在声明中使用 rapid.Mixed
-ObjectId   // 要指定类型为 ObjectId，在声明中使用 rapid.ObjectId
-Decimal128 // 在声明中使用 rapid.Decimal128
+Mixed      // 一个啥都可以放的 SchemaType, 虽然便利，但也会让数据难以维护。在声明中使用 RapidQuery.Mixed
+ObjectId   // 要指定类型为 ObjectId，在声明中使用 RapidQuery.ObjectId
+Decimal128 // 在声明中使用 RapidQuery.Decimal128
 ```
 
 所有可用的选项
@@ -677,7 +676,9 @@ $nin:
 ### Mongoose DB
 ### 获取Mongoose的db原型
 
-db中包含了所有定义的Models, Schemas, Connections等，如果需要进行扩展开发，可以使用rapid.db来获取。只能通过异步来获取。
+db中包含了所有定义的Models, Schemas, Connections等，如果需要进行扩展开发，可以使用await RapidQuery.connect来获取。只能通过异步来获取。
 ```key
-var db = await rapid.db
+var db = await RapidQuery.connect({
+  host: "mongodb://localhost:27017/rapid"
+});
 ```

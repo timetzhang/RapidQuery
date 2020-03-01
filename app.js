@@ -1,147 +1,101 @@
-const RapidQuery = require("./index");
+const RapidQuery = require("../rapidquery");
 
+RapidQuery.connect({
+    host: "mongodb://admin:cl3bkm4fuc@localhost:27017/oiart?authSource=admin"
+});
 
-async function run() {
-
-    var rapid = new RapidQuery({
-        host: "mongodb://admin:cl3bkm4fuc@localhost:27017/rapid?authSource=admin"
-    });
-
-    var users = rapid.define({
-        name: "users",
-        description: "用户数据",
-        fields: {
-            id: {
-                type: rapid.ObjectId,
-                default: rapid.ObjectId()
-            },
-            firstname: String,
-            lastname: String,
-            age: {
-                type: Number,
-                //数值验证, 最小值为15, 最大值为30
-                min: 6,
-                max: 12
-            },
-            alias: Array,
-            school: {
-                name: String
-            }
+RapidQuery.define({
+    name: "artists",
+    description: "artists",
+    fields: {
+        name: {
+            type: String,
+            require: true
         },
-        options: {
-            timestamp: true, //可以不填，默认为true, model会自动添加 meta: {createdAt, updatedAt}
-            discriminatorKey: "kind"
-        }
-    });
-    var users = rapid.define({
-        name: "students",
-        description: "用户数据",
-        fields: {
-            id: {
-                type: rapid.ObjectId,
-                default: rapid.ObjectId()
-            },
-            firstname: String,
+        image: Array,
+        position: String,
+        profession: String,
+        team: String
+    }
+})
+
+RapidQuery.define({
+    name: "works",
+    description: "works",
+    fields: {
+        name: {
+            type: String,
+            require: true,
+            trim: true
         },
-        options: {
-            timestamp: true, //可以不填，默认为true, model会自动添加 meta: {createdAt, updatedAt}
-            discriminatorKey: "kind"
+        artists: Array,
+        exhibition: String,
+        details: String,
+        video: String,
+        image: String,
+        keywords: Array,
+        type: {
+            type: String,
+            enum: ["finished", "working"]
         }
+    }
+})
+
+RapidQuery.define({
+    name: "wikis",
+    description: "wikis",
+    fields: {
+        name: {
+            type: String,
+            require: true,
+            unique: true
+        },
+        user: String,
+        images: Array,
+        videos: Array,
+        details: String,
+        clicks: String,
+        relatedLinks: Array,
+        type: {
+            type: String,
+            enum: ["维基", "新闻", "成员", "作品"]
+        },
+        spec: RapidQuery.Mixed
+    }
+})
+
+RapidQuery.query(`
+    {
+        "read artists":{}
+    }
+`).then(r => {
+    console.log(r)
+    r.artists.forEach(element => {
+        var q = `{
+                "update wikis":{
+                    name: "${element.name}",
+                    $update:{
+                        type:"成员",
+                        images:["${element.image}"],
+                        spec:{
+                            "position" : "${element.position}",
+                            "profession" : "${element.profession}",
+                            "team" : "${element.team}"
+                        }
+                    }
+                }
+            }`
+        RapidQuery.query(q).then(res => {
+            console.log(res)
+        })
     });
+})
 
-    var data = await rapid
-        .query(`{
-            "aggregate users":[
-                {$match: { firstname: /t/}},
-                {$group : {_id : "$firstname", num_tutorial : {$max : "$createdAt"}}}
-            ],
-        }`)
-
-    console.log(data)
-
-
-
-
-}
-
-run()
-
-// rapid
-//   .query({
-//     "create users": [
-//       {
-//         firstname: "tt",
-//         lastname: "zhang",
-//         email: "asd@as.com",
-//         age: 8,
-//         school: {
-//           name: "UCLA"
-//         }
-//       }
-//     ]
-//   })
-//   .then(res => {
-//     console.log(res);
-//   })
-//   .catch(err => {
-//     console.log(err);
-//   });
-
-
-
-// rapid
-//   .query({
-//     "query users": {
-//       $pageSize: 1,
-//       $pageNum: 2
+// RapidQuery.query(`{"update wikis":{
+//     type: "news",
+//     $update: {
+//         type: "新闻"
 //     }
-//   })
-//   .then(res => {
-//     console.log(res);
-//   });
-
-// rapid.query({
-//   "query users": {
-//     $or: [{ age: 22 }, { age: 29 }]
-//   }
-// });
-
-// rapid.query({
-//   "update users": {
-//     "*firstname": "tt",
-//     age: 35
-//   }
-// });
-
-// rapid.query({
-//   "delete users": {
-//     $age: 29
-//   }
-// });
-
-// rapid
-//   .query({
-//     "query users": {}
-//   })
-//   .then(res => {
-//     console.log(res);
-//   });
-
-// rapid
-//   .query({
-//     "read users": {
-//       $group: [
-//         {
-//           $group: {
-//             _id: "$lastname",
-//             age: { $min: "$age" },
-//             maxage: { $max: "$age" },
-//             num: { $sum: 1 }
-//           }
-//         }
-//       ]
-//     }
-//   })
-//   .then(res => {
-//     console.log(res);
-//   });
+//   }}`).then(r => {
+//     console.log(r)
+// })
