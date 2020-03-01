@@ -1,6 +1,6 @@
 # RapidQuery
 
-#### Ver 0.2.5a
+#### Ver 0.2.6
 
 ## Content
 ### [Intro](#1-intro)
@@ -603,6 +603,7 @@ $nin:
 ### 将数值添加到数组
 
 更改名字为 "tt" 的用户<br />
+注意：Update至少需要一个条件，否则无法执行
 
 ```key
 {
@@ -643,6 +644,8 @@ $nin:
 ## 删除 Document
 
 删除年龄为35的一个用户. <br />
+注意：Delete至少需要一个条件，否则无法执行
+
 ```keys
 {
   "delete users": {
