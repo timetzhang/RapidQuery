@@ -193,6 +193,16 @@ module.exports = {
                             delete document.$pageNum;
                         }
 
+                        if (document.$skip) {
+                            var skip = parseInt(document.$skip);
+                            delete document.$skip;
+                        }
+
+                        if (document.$limit) {
+                            var limit = parseInt(document.$limit);
+                            delete document.$limit;
+                        }
+
                         //select
                         if (document.$select) {
                             var select = document.$select;
